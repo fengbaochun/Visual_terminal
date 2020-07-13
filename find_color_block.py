@@ -1,4 +1,5 @@
 import sys
+import cv2
 import serial
 import serial.tools.list_ports
 import numpy as np
@@ -8,11 +9,12 @@ from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QCheckBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtGui import QImage, QPixmap
 
 from Ui_find_color_block import Ui_find_color_block
 
 from Color_recognition.Color_block_recogn import Color_block_recogn
-from Camera import Cam_dev
+from Camera.Cam_dev import Cam_dev
 
 tar_color = 'red'
 
@@ -80,12 +82,15 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.checkBox_Red.clicked.connect(self.Checkboxclick) 
         self.checkBox_Yellow.clicked.connect(self.Checkboxclick) 
         self.checkBox_Blue.clicked.connect(self.Checkboxclick) 
-
-        # self.print_hsv_data(self.hsv,self.red_hsv)
+        
+        # 初始化摄像头
+        self.video = Cam_dev(0,640,480)
+        # 初始化定时器
+        self.timer = QTimer()  
+        self.timer.timeout.connect(self.get_data_result)
+        self.timer.start(10) #定时
         
         print("初始化 ok")
-
-        self.timer = QTimer()  
  
         pass
 
@@ -186,7 +191,6 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
             self.checkBox_Yellow.setCheckState(Qt.Unchecked)
             self.checkBox_Red.setCheckState(Qt.Unchecked)
 
-
         elif name == self.checkBox_Red.objectName():
 
             print("参数为："+str(red_hsv))
@@ -205,12 +209,27 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
 
         elif name == self.checkBox_Yellow.objectName():
-            
             self.fill_data_to_Slider(yellow_hsv)
             self.checkBox_Blue.setCheckState(Qt.Unchecked)
             self.checkBox_Red.setCheckState(Qt.Unchecked)
             
+        pass
+        
+    '''定时器识别图像'''
+    def get_data_result(self):
+        print(red_hsv)
+        
 
+        img = cv2.cvtColor(self.video.get_img(), cv2.COLOR_BGR2RGB) 
+        rows, cols, channels=img.shape
+        bytesPerLine = channels * cols
+        QImg = QImage(img.data, cols, rows, bytesPerLine, QImage.Format_RGB888)
+
+        self.label_img.setPixmap(QPixmap.fromImage(QImg).scaled(
+            self.label_img.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
+
+
+        cv2.waitKey(1)
         pass
 
     
@@ -220,3 +239,5 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
 
 # https://www.cnblogs.com/komean/p/11209780.html
+# https://blog.csdn.net/DerrickRose25/article/details/86744787
+# https://blog.csdn.net/qq_42282163/article/details/86359302
