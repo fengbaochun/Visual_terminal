@@ -91,28 +91,31 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
     '''滑块'''
     def Slider_change(self):
-        hsv=[]
+        temp_hsv=[]
         # 获取滑块数值并更新到控件中
-        hsv.append(self.H_Slider_max.value())
-        hsv.append(self.H_Slider_min.value())
-        hsv.append(self.S_Slider_max.value())
-        hsv.append(self.S_Slider_min.value())
-        hsv.append(self.V_Slider_max.value())
-        hsv.append(self.V_Slider_min.value())
+        temp_hsv.append(self.H_Slider_max.value())
+        temp_hsv.append(self.H_Slider_min.value())
+        temp_hsv.append(self.S_Slider_max.value())
+        temp_hsv.append(self.S_Slider_min.value())
+        temp_hsv.append(self.V_Slider_max.value())
+        temp_hsv.append(self.V_Slider_min.value())
 
-        print(hsv)
+        if self.checkBox_Red.isChecked():
+            print("红色"+str(temp_hsv))
+        elif self.checkBox_Blue.isChecked():
+            print("蓝色"+str(temp_hsv))
+        elif self.checkBox_Yellow.isChecked():                
+            print("黄色"+str(temp_hsv))
+            pass
 
-        # # # 将滑块数据更新到字典        
-        # if self.checkBox_Red.isChecked():
-        #     red_hsv = hsv
-        # elif self.checkBox_Blue.isChecked():
-        #     blue_hsv = hsv
-        # elif self.checkBox_Yellow.isChecked():
-        #     yellow_hsv = hsv
+        # print(str(self.checkBox_Red.isChecked()))
+        # print(str(self.checkBox_Blue.isChecked()))
+        # print(str(self.checkBox_Yellow.isChecked()))
 
-
+        # print(hsv)
         self.TextEdit_hsv.clear()
-        self.TextEdit_hsv.insertPlainText(str(hsv))
+        self.TextEdit_hsv.insertPlainText(str(temp_hsv))
+        temp_hsv.clear()
 
         pass
 
