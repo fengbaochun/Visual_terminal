@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QMessageBox,QApplication
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QCheckBox
 from PyQt5.QtCore import Qt
+from PyQt5.QtCore import pyqtSlot
 
 from Ui_find_color_block import Ui_find_color_block
 
@@ -73,6 +74,9 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.print_hsv_data(self.hsv,self.red_hsv)
         
         print("初始化 ok")
+
+        self.timer = QTimer()  
+ 
         pass
 
     def print_hsv_data(self,temp,quanju):
@@ -93,6 +97,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         pass
 
     '''滑块'''
+    # @pyqtSlot()
+    # @staticmethod
     def Slider_change(self):
         temp_hsv=[]
         # 获取滑块数值并更新到控件中
@@ -125,6 +131,9 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         print(self.num)
         self.num=self.num+1
 
+        if self.checkBox_Red.isChecked():
+            self.red_hsv=temp_hsv
+
         # print(hsv)
         self.TextEdit_hsv.clear()
         self.TextEdit_hsv.insertPlainText(str(temp_hsv))
@@ -133,40 +142,46 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         pass
 
     '''颜色选择'''
+    @pyqtSlot()
     def Checkboxclick(self):
         # 控件名字
         name = self.sender().objectName()
+        print(self.num)
+        self.num=self.num+1
         
         if name == self.checkBox_Blue.objectName():
             # 清除
             self.TextEdit_hsv.clear()
             # 修改滑块位置
-            # self.fill_data_to_Slider(color_dict["blue"])
             self.fill_data_to_Slider(self.blue_hsv)
             # 清除选中
             self.checkBox_Yellow.setCheckState(Qt.Unchecked)
             self.checkBox_Red.setCheckState(Qt.Unchecked)
+            print("蓝色")
+            return
 
         elif name == self.checkBox_Red.objectName():
             self.TextEdit_hsv.clear()
-            # self.fill_data_to_Slider(color_dict["red"])
             self.fill_data_to_Slider(self.red_hsv)
 
             self.checkBox_Yellow.setCheckState(Qt.Unchecked)
             self.checkBox_Blue.setCheckState(Qt.Unchecked)
-
+            print("红色")
+            return
 
         elif name == self.checkBox_Yellow.objectName():
             
             self.TextEdit_hsv.clear()
-            # self.fill_data_to_Slider(color_dict["yellow"])
             self.fill_data_to_Slider(self.yellow_hsv)
 
             self.checkBox_Blue.setCheckState(Qt.Unchecked)
             self.checkBox_Red.setCheckState(Qt.Unchecked)
-
+            print("黄色")
+            return
+            
 
         pass
+
     
     def init(self):
 
