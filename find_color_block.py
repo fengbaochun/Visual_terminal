@@ -221,12 +221,26 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         
 
         img = cv2.cvtColor(self.video.get_img(), cv2.COLOR_BGR2RGB) 
+        inRange_hsv = cv2.inRange(img, np.array([127, 60, 171]),np.array([188, 197, 255]))
+
+        cv2.imshow('inRange_hsv', inRange_hsv)
+
+        # 显示 原图
         rows, cols, channels=img.shape
         bytesPerLine = channels * cols
         QImg = QImage(img.data, cols, rows, bytesPerLine, QImage.Format_RGB888)
 
         self.label_img.setPixmap(QPixmap.fromImage(QImg).scaled(
             self.label_img.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
+
+
+        # # 显示 黑白图
+        # rows, cols, channels=inRange_hsv.shape
+        # bytesPerLine = channels * cols
+        # QImg = QImage(inRange_hsv.data, cols, rows, bytesPerLine, QImage.Format_Grayscale8)
+
+        # self.label_img_gray.setPixmap(QPixmap.fromImage(QImg).scaled(
+        #     self.label_img_gray.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
 
         cv2.waitKey(1)
