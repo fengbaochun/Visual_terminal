@@ -34,7 +34,7 @@ yellow_hsv=[60,197,188,100,197,255]
 
 
 class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
-   
+    hsv=[]
     '''初始化'''
     def __init__(self):
         super(Find_color_block, self).__init__()
@@ -59,6 +59,16 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.checkBox_Red.clicked.connect(self.Checkboxclick) 
         self.checkBox_Yellow.clicked.connect(self.Checkboxclick) 
         self.checkBox_Blue.clicked.connect(self.Checkboxclick) 
+
+        self.checkBox_Red.setCheckState(Qt.Checked)
+        # 设置默认为红色
+        self.hsv=red_hsv
+        self.H_Slider_max.setValue(self.hsv[0])
+        self.H_Slider_min.setValue(self.hsv[1])
+        self.S_Slider_max.setValue(self.hsv[2])
+        self.S_Slider_min.setValue(self.hsv[3])
+        self.V_Slider_max.setValue(self.hsv[4])
+        self.V_Slider_min.setValue(self.hsv[5])
         
         print("初始化 ok")
         pass
