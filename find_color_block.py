@@ -130,6 +130,9 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         temp_hsv.append(self.V_Slider_min.value())
         
         print("当前滑块数值为"+str(temp_hsv))
+        print("红色"+str(self.checkBox_Red.isChecked()))
+        print("蓝色"+str(self.checkBox_Blue.isChecked()))
+        print("黄色"+str(self.checkBox_Yellow.isChecked()))
 
         if self.checkBox_Red.isChecked():
             red_hsv[0]=temp_hsv[0]
@@ -165,9 +168,9 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         # global red_hsv
         # global bule_hsv
         # global yellow_hsv
-        print("红色参数为："+str(red_hsv))
-        print("蓝色参数为："+str(blue_hsv))
-        print("黄色参数为："+str(yellow_hsv))
+        print("红色参数为："+str(self.checkBox_Red.isChecked())+str(red_hsv))
+        print("蓝色参数为："+str(self.checkBox_Blue.isChecked())+str(blue_hsv))
+        print("黄色参数为："+str(self.checkBox_Yellow.isChecked())+str(yellow_hsv))
 
         # 控件名字
         name = self.sender().objectName()
