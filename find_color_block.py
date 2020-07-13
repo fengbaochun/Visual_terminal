@@ -176,18 +176,16 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
 
         if name == self.checkBox_Blue.objectName():
-            # 清除
-            # self.TextEdit_hsv.clear()
+
             # 修改滑块位置
             self.fill_data_to_Slider(blue_hsv)
             # 清除选中
             self.checkBox_Yellow.setCheckState(Qt.Unchecked)
             self.checkBox_Red.setCheckState(Qt.Unchecked)
-            print("蓝色")
-            return
+
 
         elif name == self.checkBox_Red.objectName():
-            # self.TextEdit_hsv.clear()
+
             print("参数为："+str(red_hsv))
             try:
                 print(str(red_hsv)+"参数将被设置")
@@ -201,18 +199,13 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
             self.checkBox_Yellow.setCheckState(Qt.Unchecked)
             self.checkBox_Blue.setCheckState(Qt.Unchecked)
-            print("红色")
-            return
+
 
         elif name == self.checkBox_Yellow.objectName():
             
-            # self.TextEdit_hsv.clear()
             self.fill_data_to_Slider(yellow_hsv)
-
             self.checkBox_Blue.setCheckState(Qt.Unchecked)
             self.checkBox_Red.setCheckState(Qt.Unchecked)
-            print("黄色")
-            return
             
 
         pass
