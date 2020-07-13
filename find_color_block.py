@@ -14,12 +14,23 @@ from Color_recognition.Color_block_recogn import Color_block_recogn
 from Camera import Cam_dev
 
 # 目标颜色
+# tar_color = 'red'
+
+# color_dict ={   'red':      [127,197,188,60,197,255],
+#                 'blue':     [50,197,188,80,197,255],
+#                 'yellow':   [60,197,188,100,197,255],
+#               }   
+
 tar_color = 'red'
 
 color_dict ={   'red':      [127,197,188,60,197,255],
                 'blue':     [50,197,188,80,197,255],
                 'yellow':   [60,197,188,100,197,255],
               }   
+
+red_hsv=[127,197,188,60,197,255]
+blue_hsv=[50,197,188,80,197,255]
+yellow_hsv=[60,197,188,100,197,255]
 
 
 class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
@@ -79,18 +90,20 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         hsv.append(self.V_Slider_max.value())
         hsv.append(self.V_Slider_min.value())
 
-        # print(hsv)
+        print(hsv)
 
         # # # 将滑块数据更新到字典        
         # if self.checkBox_Red.isChecked():
-        #     color_dict["red"]=hsv
-            # print("数据已经更新到字典中")
-            # print(color_dict["red"])
-        # # elif self.checkBox_Blue.isChecked():
+        #     red_hsv = hsv
+        # elif self.checkBox_Blue.isChecked():
+        #     blue_hsv = hsv
+        # elif self.checkBox_Yellow.isChecked():
+        #     yellow_hsv = hsv
 
-        # # elif self.checkBox_Yellow.isChecked():
 
-        self.TextEdit_hsv.appendPlainText(str(hsv))
+        self.TextEdit_hsv.clear()
+        self.TextEdit_hsv.insertPlainText(str(hsv))
+
         pass
 
     '''颜色选择'''
@@ -102,14 +115,16 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
             # 清除
             self.TextEdit_hsv.clear()
             # 修改滑块位置
-            self.fill_data_to_Slider(color_dict["blue"])
+            # self.fill_data_to_Slider(color_dict["blue"])
+            self.fill_data_to_Slider(blue_hsv)
             # 清除选中
             self.checkBox_Yellow.setCheckState(Qt.Unchecked)
             self.checkBox_Red.setCheckState(Qt.Unchecked)
 
         elif name == self.checkBox_Red.objectName():
             self.TextEdit_hsv.clear()
-            self.fill_data_to_Slider(color_dict["red"])
+            # self.fill_data_to_Slider(color_dict["red"])
+            self.fill_data_to_Slider(red_hsv)
 
             self.checkBox_Yellow.setCheckState(Qt.Unchecked)
             self.checkBox_Blue.setCheckState(Qt.Unchecked)
@@ -118,7 +133,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         elif name == self.checkBox_Yellow.objectName():
             
             self.TextEdit_hsv.clear()
-            self.fill_data_to_Slider(color_dict["yellow"])
+            # self.fill_data_to_Slider(color_dict["yellow"])
+            self.fill_data_to_Slider(yellow_hsv)
 
             self.checkBox_Blue.setCheckState(Qt.Unchecked)
             self.checkBox_Red.setCheckState(Qt.Unchecked)
