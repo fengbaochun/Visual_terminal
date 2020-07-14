@@ -118,7 +118,7 @@ def recogn_main():
 
     while True:
 
-        img,inRange_hsv = revogn.get_target_info(video.get_img())
+        img,inRange_hsv = revogn.get_target_info(video.get_img(1))
         
         # 显示图像
         cv2.imshow('inRange_hsv', inRange_hsv)
