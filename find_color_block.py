@@ -14,6 +14,7 @@ from PyQt5.QtGui import QImage, QPixmap
 from Ui_find_color_block import Ui_find_color_block
 
 from Color_recognition.Color_block_recogn import Color_block_recogn
+
 from Camera.Cam_dev import Cam_dev
 
 tar_color = 'red'
@@ -24,13 +25,21 @@ color_dict ={   'red':      [127,197,188,60,197,255],
               }   
 
 # 子函数操作全局变量 需要加关键词
+''' HSV 色彩空间 '''
 global red_hsv
 global bule_hsv
 global yellow_hsv
 
-red_hsv=[50,50,50,50,50,50]
-blue_hsv=[120,120,120,120,120,120]
-yellow_hsv=[200,200,200,200,200,200]
+''' 默认HSV '''
+red_hsv = [108, 190, 120, 255, 163, 223]
+blue_hsv = [74, 131, 107, 241, 146, 255]
+yellow_hsv = [30, 83, 60, 209, 156, 255]
+
+'''特征参数,长 宽 边缘阈值'''
+feature_param=[50,50,100,250]
+
+''' rect 颜色'''
+rgb_param=[0,0,255]
 
 class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
@@ -76,9 +85,10 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.checkBox_Yellow.clicked.connect(self.on_yellow_click) 
         self.checkBox_Blue.clicked.connect(self.on_blue_click) 
         
-        # 初始化摄像头
+        '''初始化摄像头以及识别相关的'''
         self.video = Cam_dev(0,640,480)
-        # 初始化定时器
+        self.revogn = Color_block_recogn(red_hsv,feature_param,rgb_param)
+
         self.timer = QTimer()  
         self.timer.timeout.connect(self.get_data_result)
         self.timer.start(10) #定时
@@ -118,8 +128,6 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         pass
 
     '''滑块'''
-    # @pyqtSlot()
-    # @staticmethod
     @pyqtSlot()
     def Slider_change(self):
         global red_hsv
@@ -176,6 +184,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.checkBox_Yellow.setCheckState(Qt.Unchecked)
         self.checkBox_Blue.setCheckState(Qt.Unchecked)
         self.fill_data_to_Slider(red_hsv)
+        self.revogn.set_hsv(red_hsv)
         print("on_red_click")
         pass
 
@@ -185,6 +194,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.checkBox_Yellow.setCheckState(Qt.Unchecked)
         self.checkBox_Red.setCheckState(Qt.Unchecked)
         self.fill_data_to_Slider(blue_hsv)
+        # 设置识别算法的参数
+        self.revogn.set_hsv(blue_hsv)
         print("on_blue_click")
         pass
 
@@ -193,17 +204,17 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.checkBox_Blue.setCheckState(Qt.Unchecked)
         self.checkBox_Red.setCheckState(Qt.Unchecked)
         self.fill_data_to_Slider(yellow_hsv)
+        self.revogn.set_hsv(yellow_hsv)
         print("on_yellow_click")
         pass
         
     '''定时器识别图像'''
     def get_data_result(self):
-        # print(red_hsv)
         
-        img = cv2.cvtColor(self.video.get_img(), cv2.COLOR_BGR2RGB) 
-        inRange_hsv = cv2.inRange(img, np.array([127, 60, 171]),np.array([188, 197, 255]))
+        img_src , inrange_img = self.revogn.get_target_info(self.video.get_img())
+        img = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB) 
 
-        # 显示 原图
+        # 显示原图
         rows, cols, channels=img.shape
         bytesPerLine = channels * cols
         QImg = QImage(img.data, cols, rows, bytesPerLine, QImage.Format_RGB888)
@@ -211,10 +222,9 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.label_img.setPixmap(QPixmap.fromImage(QImg).scaled(
             self.label_img.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
-
-        # 显示 黑白图
-        rows, cols=inRange_hsv.shape
-        QImg = QImage(inRange_hsv.data, cols, rows,  QImage.Format_Grayscale8)
+        # 显示黑白图
+        rows, cols=inrange_img.shape
+        QImg = QImage(inrange_img.data, cols, rows,  QImage.Format_Grayscale8)
         self.label_img_gray.setPixmap(QPixmap.fromImage(QImg).scaled(
             self.label_img_gray.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 

@@ -9,9 +9,9 @@ color_dict = {'red': {'Lower': np.array([127, 60, 171]), 'Upper': np.array([188,
               'green': {'Lower': np.array([35, 43, 35]), 'Upper': np.array([90, 255, 255])},
               }              
 
-red_hsv = [127,188,60,197,171,255]
-blue_hsv = [100,124,80,255,46,255]
-yellow_hsv = [35,90,43,255,35,255]
+red_hsv = [108, 190, 120, 255, 163, 223]
+blue_hsv = [74, 131, 107, 241, 146, 255]
+yellow_hsv = [30, 83, 60, 209, 156, 255]
 
 '''特征参数,长 宽 边缘阈值'''
 feature_param=[50,50,100,250]
@@ -51,7 +51,7 @@ class Color_block_recogn():
         pass
 
         ''' 按照索引获取识别目标的信息 '''
-    def get_target_info(self,img,index):
+    def get_target_info(self,img):
         # 高斯模糊
         gs_img = cv2.GaussianBlur(img, (5, 5), 0)                     
         # 转成 HSV 图
@@ -95,35 +95,30 @@ class Color_block_recogn():
 
                 pass
 
-
-
-        # 显示图像
-        cv2.imshow('inRange_hsv', inRange_hsv)
-        cv2.imshow('src_img', img)
-        pass
+        #返回图像等参数 
+        return img,inRange_hsv
     
-
-    def get_img(self):
-
-        pass
-
     pass
 
-
+''' 识别 demo '''
 def recogn_main():
     
     video = Cam_dev(0,640,480)
     revogn = Color_block_recogn(red_hsv,feature_param,rgb_param)
+
     while True:
-        frame = video.get_img()
-        # cv2.imshow('src_img', frame)
-        revogn.get_target_info(frame,tar_color)
+
+        img,inRange_hsv = revogn.get_target_info(video.get_img())
+        
+        # 显示图像
+        cv2.imshow('inRange_hsv', inRange_hsv)
+        cv2.imshow('src_img', img)
+
         cv2.waitKey(30)
     pass
 
 
 if __name__ == "__main__":
-    # cam_main()
     recogn_main()
     pass
 
