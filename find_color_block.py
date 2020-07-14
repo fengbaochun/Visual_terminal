@@ -71,9 +71,9 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.V_Slider_min.valueChanged.connect(self.Slider_change)   
 
         # 选择框
-        self.checkBox_Red.clicked.connect(self.Checkboxclick) 
-        self.checkBox_Yellow.clicked.connect(self.Checkboxclick) 
-        self.checkBox_Blue.clicked.connect(self.Checkboxclick) 
+        self.checkBox_Red.clicked.connect(self.on_red_click) 
+        self.checkBox_Yellow.clicked.connect(self.on_yellow_click) 
+        self.checkBox_Blue.clicked.connect(self.on_blue_click) 
         
         # 初始化摄像头
         self.video = Cam_dev(0,640,480)
@@ -86,81 +86,32 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
  
         pass
 
-    # def print_hsv_data(self,temp,quanju):
-    #     print(temp)
-    #     print(quanju)        
-    #     pass
     
     '''更新数据到控件'''
     def fill_data_to_Slider(self,data=[]):
-        # print("--------设置滑块位置-------------------------"+str(data))
-        # # 设置滑块位置
-        # self.H_Slider_max.setValue(int(data[0]))
-        # self.H_Slider_min.setValue(int(data[1]))
-        # self.S_Slider_max.setValue(int(data[2]))
-        # self.S_Slider_min.setValue(int(data[3]))
-        # self.V_Slider_max.setValue(int(data[4]))
-        # self.V_Slider_min.setValue(int(data[5]))
+        print("--------设置滑块位置-------------------------"+str(data))
+        # 设置滑块位置
+        self.H_Slider_max.setValue(int(data[0]))
+        self.H_Slider_min.setValue(int(data[1]))
+        self.S_Slider_max.setValue(int(data[2]))
+        self.S_Slider_min.setValue(int(data[3]))
+        self.V_Slider_max.setValue(int(data[4]))
+        self.V_Slider_min.setValue(int(data[5]))
 
-        # temp=[]
-        # temp.append(self.H_Slider_max.value())
-        # temp.append(self.H_Slider_min.value())
-        # temp.append(self.S_Slider_max.value())
-        # temp.append(self.S_Slider_min.value())
-        # temp.append(self.V_Slider_max.value())
-        # temp.append(self.V_Slider_min.value())
+        temp=[]
+        temp.append(self.H_Slider_max.value())
+        temp.append(self.H_Slider_min.value())
+        temp.append(self.S_Slider_max.value())
+        temp.append(self.S_Slider_min.value())
+        temp.append(self.V_Slider_max.value())
+        temp.append(self.V_Slider_min.value())
 
-        # print("--------设置完读取位置-------------------------"+str(temp))
-        # print("--------设置滑块位置-------------------------"+str(red_hsv))
-        # # 设置滑块位置
-        # self.H_Slider_max.setValue(int(red_hsv[0]))
-        # self.H_Slider_min.setValue(int(red_hsv[1]))
-        # self.S_Slider_max.setValue(int(red_hsv[2]))
-        # self.S_Slider_min.setValue(int(red_hsv[3]))
-        # self.V_Slider_max.setValue(int(red_hsv[4]))
-        # self.V_Slider_min.setValue(int(red_hsv[5]))
-
-        # temp=[]
-        # temp.append(self.H_Slider_max.value())
-        # temp.append(self.H_Slider_min.value())
-        # temp.append(self.S_Slider_max.value())
-        # temp.append(self.S_Slider_min.value())
-        # temp.append(self.V_Slider_max.value())
-        # temp.append(self.V_Slider_min.value())
-
-        # print("--------设置完读取位置-------------------------"+str(temp))
+        print("--------设置完读取位置-------------------------"+str(temp))
         
         # 清除控件内容
         self.TextEdit_hsv.clear() 
-
-        if self.checkBox_Red.isChecked():
-            # 设置滑块位置
-            self.H_Slider_max.setValue(red_hsv[0])
-            self.H_Slider_min.setValue(red_hsv[1])
-            self.S_Slider_max.setValue(red_hsv[2])
-            self.S_Slider_min.setValue(red_hsv[3])
-            self.V_Slider_max.setValue(red_hsv[4])
-            self.V_Slider_min.setValue(red_hsv[5])
-            # 更新字符串到控件
-            self.TextEdit_hsv.insertPlainText(str(red_hsv))            
-        elif self.checkBox_Blue.isChecked():
-            self.H_Slider_max.setValue(bule_hsv[0])
-            self.H_Slider_min.setValue(bule_hsv[1])
-            self.S_Slider_max.setValue(bule_hsv[2])
-            self.S_Slider_min.setValue(bule_hsv[3])
-            self.V_Slider_max.setValue(bule_hsv[4])
-            self.V_Slider_min.setValue(bule_hsv[5])
-            # 更新字符串到控件
-            self.TextEdit_hsv.insertPlainText(str(bule_hsv))               
-        elif self.checkBox_Yellow.isChecked():
-            self.H_Slider_max.setValue(yellow_hsv[0])
-            self.H_Slider_min.setValue(yellow_hsv[1])
-            self.S_Slider_max.setValue(yellow_hsv[2])
-            self.S_Slider_min.setValue(yellow_hsv[3])
-            self.V_Slider_max.setValue(yellow_hsv[4])
-            self.V_Slider_min.setValue(yellow_hsv[5])
-            # 更新字符串到控件
-            self.TextEdit_hsv.insertPlainText(str(yellow_hsv))                        
+        # 更新字符串到控件
+        self.TextEdit_hsv.insertPlainText(str(data))                                  
 
         pass
 
@@ -215,51 +166,33 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         temp_hsv.clear()
 
         pass
-
-    '''颜色选择'''
+    
+    '''颜色选择槽函数'''
     @pyqtSlot()
-    def Checkboxclick(self):
+    def on_red_click(self):
+        self.checkBox_Yellow.setCheckState(Qt.Unchecked)
+        self.checkBox_Blue.setCheckState(Qt.Unchecked)
+        self.fill_data_to_Slider(red_hsv)
+        print("on_red_click")
+        pass
 
-        print("红色参数为："+str(self.checkBox_Red.isChecked())+str(red_hsv))
-        print("蓝色参数为："+str(self.checkBox_Blue.isChecked())+str(blue_hsv))
-        print("黄色参数为："+str(self.checkBox_Yellow.isChecked())+str(yellow_hsv))
+    @pyqtSlot()
+    def on_blue_click(self):
+        # 清除选中
+        self.checkBox_Yellow.setCheckState(Qt.Unchecked)
+        self.checkBox_Red.setCheckState(Qt.Unchecked)
+        # 修改滑块位置
+        self.fill_data_to_Slider(blue_hsv)
+        print("on_blue_click")
+        pass
 
-        # 控件名字
-        name = self.sender().objectName()
-        print(self.num)
-        self.num=self.num+1
+    @pyqtSlot()
+    def on_yellow_click(self):
+        self.checkBox_Blue.setCheckState(Qt.Unchecked)
+        self.checkBox_Red.setCheckState(Qt.Unchecked)
 
-
-        if name == self.checkBox_Blue.objectName():
-            # 清除选中
-            self.checkBox_Yellow.setCheckState(Qt.Unchecked)
-            self.checkBox_Red.setCheckState(Qt.Unchecked)
-
-            # 修改滑块位置
-            self.fill_data_to_Slider(blue_hsv)
-        elif name == self.checkBox_Red.objectName():
-
-            self.checkBox_Yellow.setCheckState(Qt.Unchecked)
-            self.checkBox_Blue.setCheckState(Qt.Unchecked)
-            self.fill_data_to_Slider(red_hsv)
-            # print("参数为："+str(red_hsv))
-            # try:
-            #     print(str(red_hsv)+"参数将被设置")
-            #     self.fill_data_to_Slider(red_hsv)
-            #     print("已经设置->"+str(red_hsv)+"成功")
-            #     pass
-            # except:
-                
-            #     print("设置失败-----------"+str(red_hsv))
-            #     pass
-
-        elif name == self.checkBox_Yellow.objectName():
-            
-            self.checkBox_Blue.setCheckState(Qt.Unchecked)
-            self.checkBox_Red.setCheckState(Qt.Unchecked)
-            
-            self.fill_data_to_Slider(yellow_hsv)
-            
+        self.fill_data_to_Slider(yellow_hsv)
+        print("on_yellow_click")
         pass
         
     '''定时器识别图像'''
