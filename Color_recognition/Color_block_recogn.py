@@ -21,13 +21,15 @@ feature_param=[40,40,60,250,20]
 rgb_param=[0,0,255]
 
 
-tar_info = {"num":0,
-            "center":[],
-            "angle":[]}
+
 
 '''色块识别类'''
 class Color_block_recogn():
     tar_num = 0
+
+    tar_info = {"num":0,
+            "center":[],
+            "angle":[]}
     
     '''初始化参数'''
     def __init__(self,color_list=[],fea_list=[],rect_rgb_list=[]):
@@ -56,7 +58,7 @@ class Color_block_recogn():
         pass
 
         ''' 按照索引获取识别目标的信息 '''
-    def get_target_info(self,img):
+    def get_target_img(self,img):
         # 高斯模糊
         gs_img = cv2.GaussianBlur(img, (5, 5), 0)                     
         # 转成 HSV 图
@@ -88,25 +90,29 @@ class Color_block_recogn():
                         cv2.drawContours(img, [np.int0(box_points)], 0, (self.rect_rgb[0],self.rect_rgb[1], self.rect_rgb[2]), 2)        
                         
                         # 加入字典
-                        tar_info["center"].append(np.int0(min_rect[0]))
-                        tar_info["angle"].append(np.int0(min_rect[2]))  
+                        self.tar_info["center"].append(np.int0(min_rect[0]))
+                        self.tar_info["angle"].append(np.int0(min_rect[2]))  
                         self.tar_num = self.tar_num + 1                    
                         # print("中心坐标："+str(np.int0(min_rect[0]))+" "+"矩形长宽："+str(np.int0(min_rect[1]))+" "+"旋转角度："+str(np.int0(min_rect[2])))
 
-            tar_info["num"] = self.tar_num
+            self.tar_info["num"] = self.tar_num
             # 打印字典内容
-            print(tar_info)
+            print(self.tar_info)
             # 清空字典
-            tar_info["center"].clear()
-            tar_info["angle"].clear()
-            tar_info["num"] = 0
+            self.tar_info["center"].clear()
+            self.tar_info["angle"].clear()
+            self.tar_info["num"] = 0
             self.tar_num = 0
 
         except:
             print("error------------->")
 
-        #返回图像等参数 
+        #返回图像以及目标参数 
         return img,inRange_hsv
+
+    ''' 获取目标 参数 '''
+    def get_tar_info(self):
+        pass
     
     pass
 
@@ -118,7 +124,7 @@ def recogn_main():
 
     while True:
 
-        img,inRange_hsv = revogn.get_target_info(video.get_img(1))
+        img,inRange_hsv = revogn.get_target_img(video.get_img(1))
         
         # 显示图像
         cv2.imshow('inRange_hsv', inRange_hsv)

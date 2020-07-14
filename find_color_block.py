@@ -46,6 +46,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     hsv=[]
     num=0
     flag = True     #防止设置滑块位置时再次进入标志
+
     '''初始化'''
     def __init__(self):
         super(Find_color_block, self).__init__()
@@ -185,6 +186,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.checkBox_Blue.setCheckState(Qt.Unchecked)
         self.fill_data_to_Slider(red_hsv)
         self.revogn.set_hsv(red_hsv)
+        self.revogn.set_rect_rgb([0,0,255])
         print("on_red_click")
         pass
 
@@ -196,6 +198,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.fill_data_to_Slider(blue_hsv)
         # 设置识别算法的参数
         self.revogn.set_hsv(blue_hsv)
+        self.revogn.set_rect_rgb([255,0,0])
         print("on_blue_click")
         pass
 
@@ -205,13 +208,15 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.checkBox_Red.setCheckState(Qt.Unchecked)
         self.fill_data_to_Slider(yellow_hsv)
         self.revogn.set_hsv(yellow_hsv)
+        self.revogn.set_rect_rgb([0,255,0])
+
         print("on_yellow_click")
         pass
         
     '''定时器识别图像'''
     def get_data_result(self):
 
-        img_src , inrange_img = self.revogn.get_target_info(self.video.get_img(1))
+        img_src , inrange_img = self.revogn.get_target_img(self.video.get_img(1))
         img = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB) 
 
         # 显示原图
