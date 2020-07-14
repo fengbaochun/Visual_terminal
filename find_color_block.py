@@ -210,8 +210,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         
     '''定时器识别图像'''
     def get_data_result(self):
-        
-        img_src , inrange_img = self.revogn.get_target_info(self.video.get_img())
+
+        img_src , inrange_img = self.revogn.get_target_info(self.video.get_img(1))
         img = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB) 
 
         # 显示原图
