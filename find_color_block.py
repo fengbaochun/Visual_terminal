@@ -36,6 +36,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
     hsv=[]
     num=0
+    flag = True     #防止设置滑块位置时再次进入标志
     '''初始化'''
     def __init__(self):
         super(Find_color_block, self).__init__()
@@ -89,6 +90,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     
     '''更新数据到控件'''
     def fill_data_to_Slider(self,data=[]):
+        self.flag = False
         print("--------设置滑块位置-------------------------"+str(data))
         # 设置滑块位置
         self.H_Slider_max.setValue(int(data[0]))
@@ -107,6 +109,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         temp.append(self.V_Slider_min.value())
 
         print("--------设置完读取位置-------------------------"+str(temp))
+        self.flag = True
         
         # 清除控件内容
         self.TextEdit_hsv.clear() 
@@ -123,47 +126,47 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         global red_hsv
         global bule_hsv
         global yellow_hsv
+        if  self.flag == True:
+            temp_hsv=[]
 
-        temp_hsv=[]
+            # 获取滑块数值并更新到控件中
+            temp_hsv.append(self.H_Slider_max.value())
+            temp_hsv.append(self.H_Slider_min.value())
+            temp_hsv.append(self.S_Slider_max.value())
+            temp_hsv.append(self.S_Slider_min.value())
+            temp_hsv.append(self.V_Slider_max.value())
+            temp_hsv.append(self.V_Slider_min.value())
+            
+            print("当前滑块数值为"+str(temp_hsv))
+            print("红色"+str(self.checkBox_Red.isChecked()))
+            print("蓝色"+str(self.checkBox_Blue.isChecked()))
+            print("黄色"+str(self.checkBox_Yellow.isChecked()))
 
-        # 获取滑块数值并更新到控件中
-        temp_hsv.append(self.H_Slider_max.value())
-        temp_hsv.append(self.H_Slider_min.value())
-        temp_hsv.append(self.S_Slider_max.value())
-        temp_hsv.append(self.S_Slider_min.value())
-        temp_hsv.append(self.V_Slider_max.value())
-        temp_hsv.append(self.V_Slider_min.value())
-        
-        print("当前滑块数值为"+str(temp_hsv))
-        print("红色"+str(self.checkBox_Red.isChecked()))
-        print("蓝色"+str(self.checkBox_Blue.isChecked()))
-        print("黄色"+str(self.checkBox_Yellow.isChecked()))
+            if self.checkBox_Red.isChecked():
+                red_hsv[0]=temp_hsv[0]
+                red_hsv[1]=temp_hsv[1]
+                red_hsv[2]=temp_hsv[2]
+                red_hsv[3]=temp_hsv[3]
+                red_hsv[4]=temp_hsv[4]
+                red_hsv[5]=temp_hsv[5]
+            elif self.checkBox_Blue.isChecked():
+                blue_hsv[0]=temp_hsv[0]
+                blue_hsv[1]=temp_hsv[1]
+                blue_hsv[2]=temp_hsv[2]
+                blue_hsv[3]=temp_hsv[3]
+                blue_hsv[4]=temp_hsv[4]
+                blue_hsv[5]=temp_hsv[5]
+            elif self.checkBox_Yellow.isChecked():
+                yellow_hsv[0]=temp_hsv[0]
+                yellow_hsv[1]=temp_hsv[1]
+                yellow_hsv[2]=temp_hsv[2]
+                yellow_hsv[3]=temp_hsv[3]
+                yellow_hsv[4]=temp_hsv[4]
+                yellow_hsv[5]=temp_hsv[5]
 
-        if self.checkBox_Red.isChecked():
-            red_hsv[0]=temp_hsv[0]
-            red_hsv[1]=temp_hsv[1]
-            red_hsv[2]=temp_hsv[2]
-            red_hsv[3]=temp_hsv[3]
-            red_hsv[4]=temp_hsv[4]
-            red_hsv[5]=temp_hsv[5]
-        elif self.checkBox_Blue.isChecked():
-            blue_hsv[0]=temp_hsv[0]
-            blue_hsv[1]=temp_hsv[1]
-            blue_hsv[2]=temp_hsv[2]
-            blue_hsv[3]=temp_hsv[3]
-            blue_hsv[4]=temp_hsv[4]
-            blue_hsv[5]=temp_hsv[5]
-        elif self.checkBox_Yellow.isChecked():
-            yellow_hsv[0]=temp_hsv[0]
-            yellow_hsv[1]=temp_hsv[1]
-            yellow_hsv[2]=temp_hsv[2]
-            yellow_hsv[3]=temp_hsv[3]
-            yellow_hsv[4]=temp_hsv[4]
-            yellow_hsv[5]=temp_hsv[5]
-
-        self.TextEdit_hsv.clear()
-        self.TextEdit_hsv.insertPlainText(str(temp_hsv))
-        temp_hsv.clear()
+            self.TextEdit_hsv.clear()
+            self.TextEdit_hsv.insertPlainText(str(temp_hsv))
+            temp_hsv.clear()
 
         pass
     
