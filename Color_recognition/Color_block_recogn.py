@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from Cam_dev import Cam_dev
+import math
 
 # 目标颜色
 tar_color = 'green'
@@ -13,12 +14,16 @@ red_hsv = [108, 190, 120, 255, 163, 223]
 blue_hsv = [74, 131, 107, 241, 146, 255]
 yellow_hsv = [30, 83, 60, 209, 156, 255]
 
-'''特征参数,长 宽 边缘阈值'''
-feature_param=[50,50,100,250]
+''' 特征参数,长 宽 边缘阈值 边框差值 '''
+feature_param=[40,40,60,250,20]
 
 ''' rect 颜色'''
 rgb_param=[0,0,255]
 
+
+tar_info = {"num":0,
+            "center":[],
+            "angle":[]}
 
 '''色块识别类'''
 class Color_block_recogn():
@@ -57,43 +62,48 @@ class Color_block_recogn():
         # 转成 HSV 图
         hsv_img = cv2.cvtColor(gs_img, cv2.COLOR_BGR2HSV)
         # 转为二值化
-        # inRange_hsv = cv2.inRange(hsv_img, self.color_thd[index]['Lower'], self.color_thd[index]['Upper'])
         inRange_hsv = cv2.inRange(hsv_img, np.array([self.hsv[0],self.hsv[2],self.hsv[4]]), np.array([self.hsv[1],self.hsv[3],self.hsv[5]]))
         # 均值滤波
         average_val_img = cv2.blur(inRange_hsv,(3,3))
         #边缘识别
         canny_img = cv2.Canny(average_val_img,128,255,3)
         # 轮廓提取
-        _,contours, hierarchy = cv2.findContours(canny_img,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-
-        targe_contour=[]
-        num = 0
+        _,contours, hierarchy = cv2.findContours(canny_img,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
         try:
             for i in range(len(contours)):
                 # if (len(contours[i])>self.fea_p[2]) and (len(contours[i])<self.fea_p[3]):
-                if (len(contours[i])>60) and (len(contours[i])<250):
+                # if (len(contours[i])>self.fea_p[2]):
+                if (len(contours[i])>40):
                     # 最小外接矩形
                     min_rect = cv2.minAreaRect(contours[i])
                     # 矩形长宽
-                    if min_rect[1][0]>self.fea_p[0] and min_rect[1][1]>self.fea_p[1]:
-                        num = num + 1
-                        # self.targe_contour.insert(i,contours[i])      
-                        targe_contour.insert(i,contours[i])  
+                    # if (min_rect[1][0]>self.fea_p[0] and min_rect[1][1]>self.fea_p[1])and(abs(min_rect[1][0]-min_rect[1][1])<self.fea_p[4]):
+                    if (min_rect[1][0]>40 and min_rect[1][1]>40)and(abs(min_rect[1][0]-min_rect[1][1])<20):
+
                         # 矩形坐标
                         box_points = cv2.boxPoints(min_rect)
                         # 标出中心点以及矩形
                         cv2.circle(img,(int(min_rect[0][0]),int(min_rect[0][1])) ,2,(self.rect_rgb[0],self.rect_rgb[1], self.rect_rgb[2]),4)
-                        cv2.drawContours(img, [np.int0(box_points)], 0, (self.rect_rgb[0],self.rect_rgb[1], self.rect_rgb[2]), 2)              
-                        self.tar_num = self.tar_num+1
-                    
+                        cv2.drawContours(img, [np.int0(box_points)], 0, (self.rect_rgb[0],self.rect_rgb[1], self.rect_rgb[2]), 2)        
+                        
+                        # 加入字典
+                        tar_info["center"].append(np.int0(min_rect[0]))
+                        tar_info["angle"].append(np.int0(min_rect[2]))  
+                        self.tar_num = self.tar_num + 1                    
                         # print("中心坐标："+str(np.int0(min_rect[0]))+" "+"矩形长宽："+str(np.int0(min_rect[1]))+" "+"旋转角度："+str(np.int0(min_rect[2])))
 
-            self.tar_num = num
-            print("目标数量"+str(self.tar_num))
-        except:
+            tar_info["num"] = self.tar_num
+            # 打印字典内容
+            print(tar_info)
+            # 清空字典
+            tar_info["center"].clear()
+            tar_info["angle"].clear()
+            tar_info["num"] = 0
+            self.tar_num = 0
 
-                pass
+        except:
+            print("error------------->")
 
         #返回图像等参数 
         return img,inRange_hsv
