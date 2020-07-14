@@ -23,19 +23,14 @@ color_dict ={   'red':      [127,197,188,60,197,255],
                 'yellow':   [60,197,188,100,197,255],
               }   
 
-
-# global red_hsv=[127,197,188,60,197,255]
-# global blue_hsv=[50,197,188,80,197,255]
-# global yellow_hsv=[60,197,188,100,197,255]
-
 # 子函数操作全局变量 需要加关键词
 global red_hsv
 global bule_hsv
 global yellow_hsv
 
-red_hsv=[127,197,188,60,197,255]
-blue_hsv=[50,197,188,80,197,255]
-yellow_hsv=[60,197,188,100,197,255]
+red_hsv=[50,50,50,50,50,50]
+blue_hsv=[120,120,120,120,120,120]
+yellow_hsv=[200,200,200,200,200,200]
 
 class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
@@ -45,10 +40,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     def __init__(self):
         super(Find_color_block, self).__init__()
         self.setupUi(self)
-        self.red_hsv=[127,197,188,60,197,255]
-        self.blue_hsv=[50,197,188,80,197,255]
-        self.yellow_hsv=[60,197,188,100,197,255]
-        
+       
         #滑块范围
         self.H_Slider_max.setRange(0,255)
         self.H_Slider_min.setRange(0,255)
@@ -61,14 +53,14 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.checkBox_Red.setCheckState(Qt.Checked)   
 
         # 设置默认为红色
-        self.hsv=self.red_hsv
+        self.hsv=red_hsv
         self.H_Slider_max.setValue(self.hsv[0])
         self.H_Slider_min.setValue(self.hsv[1])
         self.S_Slider_max.setValue(self.hsv[2])
         self.S_Slider_min.setValue(self.hsv[3])
         self.V_Slider_max.setValue(self.hsv[4])
         self.V_Slider_min.setValue(self.hsv[5])
-        self.TextEdit_hsv.insertPlainText(str(self.red_hsv))
+        self.TextEdit_hsv.insertPlainText(str(red_hsv))
 
         # 槽函数
         self.H_Slider_max.valueChanged.connect(self.Slider_change)   
@@ -101,17 +93,74 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     
     '''更新数据到控件'''
     def fill_data_to_Slider(self,data=[]):
-        # 设置滑块位置
-        self.H_Slider_max.setValue(data[0])
-        self.H_Slider_min.setValue(data[1])
-        self.S_Slider_max.setValue(data[2])
-        self.S_Slider_min.setValue(data[3])
-        self.V_Slider_max.setValue(data[4])
-        self.V_Slider_min.setValue(data[5])
+        # print("--------设置滑块位置-------------------------"+str(data))
+        # # 设置滑块位置
+        # self.H_Slider_max.setValue(int(data[0]))
+        # self.H_Slider_min.setValue(int(data[1]))
+        # self.S_Slider_max.setValue(int(data[2]))
+        # self.S_Slider_min.setValue(int(data[3]))
+        # self.V_Slider_max.setValue(int(data[4]))
+        # self.V_Slider_min.setValue(int(data[5]))
+
+        # temp=[]
+        # temp.append(self.H_Slider_max.value())
+        # temp.append(self.H_Slider_min.value())
+        # temp.append(self.S_Slider_max.value())
+        # temp.append(self.S_Slider_min.value())
+        # temp.append(self.V_Slider_max.value())
+        # temp.append(self.V_Slider_min.value())
+
+        # print("--------设置完读取位置-------------------------"+str(temp))
+        # print("--------设置滑块位置-------------------------"+str(red_hsv))
+        # # 设置滑块位置
+        # self.H_Slider_max.setValue(int(red_hsv[0]))
+        # self.H_Slider_min.setValue(int(red_hsv[1]))
+        # self.S_Slider_max.setValue(int(red_hsv[2]))
+        # self.S_Slider_min.setValue(int(red_hsv[3]))
+        # self.V_Slider_max.setValue(int(red_hsv[4]))
+        # self.V_Slider_min.setValue(int(red_hsv[5]))
+
+        # temp=[]
+        # temp.append(self.H_Slider_max.value())
+        # temp.append(self.H_Slider_min.value())
+        # temp.append(self.S_Slider_max.value())
+        # temp.append(self.S_Slider_min.value())
+        # temp.append(self.V_Slider_max.value())
+        # temp.append(self.V_Slider_min.value())
+
+        # print("--------设置完读取位置-------------------------"+str(temp))
+        
         # 清除控件内容
         self.TextEdit_hsv.clear() 
-        # 更新字符串到控件
-        self.TextEdit_hsv.insertPlainText(str(data))
+
+        if self.checkBox_Red.isChecked():
+            # 设置滑块位置
+            self.H_Slider_max.setValue(red_hsv[0])
+            self.H_Slider_min.setValue(red_hsv[1])
+            self.S_Slider_max.setValue(red_hsv[2])
+            self.S_Slider_min.setValue(red_hsv[3])
+            self.V_Slider_max.setValue(red_hsv[4])
+            self.V_Slider_min.setValue(red_hsv[5])
+            # 更新字符串到控件
+            self.TextEdit_hsv.insertPlainText(str(red_hsv))            
+        elif self.checkBox_Blue.isChecked():
+            self.H_Slider_max.setValue(bule_hsv[0])
+            self.H_Slider_min.setValue(bule_hsv[1])
+            self.S_Slider_max.setValue(bule_hsv[2])
+            self.S_Slider_min.setValue(bule_hsv[3])
+            self.V_Slider_max.setValue(bule_hsv[4])
+            self.V_Slider_min.setValue(bule_hsv[5])
+            # 更新字符串到控件
+            self.TextEdit_hsv.insertPlainText(str(bule_hsv))               
+        elif self.checkBox_Yellow.isChecked():
+            self.H_Slider_max.setValue(yellow_hsv[0])
+            self.H_Slider_min.setValue(yellow_hsv[1])
+            self.S_Slider_max.setValue(yellow_hsv[2])
+            self.S_Slider_min.setValue(yellow_hsv[3])
+            self.V_Slider_max.setValue(yellow_hsv[4])
+            self.V_Slider_min.setValue(yellow_hsv[5])
+            # 更新字符串到控件
+            self.TextEdit_hsv.insertPlainText(str(yellow_hsv))                        
 
         pass
 
@@ -170,9 +219,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     '''颜色选择'''
     @pyqtSlot()
     def Checkboxclick(self):
-        # global red_hsv
-        # global bule_hsv
-        # global yellow_hsv
+
         print("红色参数为："+str(self.checkBox_Red.isChecked())+str(red_hsv))
         print("蓝色参数为："+str(self.checkBox_Blue.isChecked())+str(blue_hsv))
         print("黄色参数为："+str(self.checkBox_Yellow.isChecked())+str(yellow_hsv))
@@ -194,17 +241,17 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
             self.checkBox_Yellow.setCheckState(Qt.Unchecked)
             self.checkBox_Blue.setCheckState(Qt.Unchecked)
-
-            print("参数为："+str(red_hsv))
-            try:
-                print(str(red_hsv)+"参数将被设置")
-                self.fill_data_to_Slider(red_hsv)
-                print("已经设置->"+str(red_hsv)+"成功")
-                pass
-            except:
+            self.fill_data_to_Slider(red_hsv)
+            # print("参数为："+str(red_hsv))
+            # try:
+            #     print(str(red_hsv)+"参数将被设置")
+            #     self.fill_data_to_Slider(red_hsv)
+            #     print("已经设置->"+str(red_hsv)+"成功")
+            #     pass
+            # except:
                 
-                print("设置失败-----------"+str(red_hsv))
-                pass
+            #     print("设置失败-----------"+str(red_hsv))
+            #     pass
 
         elif name == self.checkBox_Yellow.objectName():
             
@@ -217,13 +264,10 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         
     '''定时器识别图像'''
     def get_data_result(self):
-        print(red_hsv)
+        # print(red_hsv)
         
-
         img = cv2.cvtColor(self.video.get_img(), cv2.COLOR_BGR2RGB) 
         inRange_hsv = cv2.inRange(img, np.array([127, 60, 171]),np.array([188, 197, 255]))
-
-        cv2.imshow('inRange_hsv', inRange_hsv)
 
         # 显示 原图
         rows, cols, channels=img.shape
@@ -234,14 +278,11 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
             self.label_img.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
 
-        # # 显示 黑白图
-        # rows, cols, channels=inRange_hsv.shape
-        # bytesPerLine = channels * cols
-        # QImg = QImage(inRange_hsv.data, cols, rows, bytesPerLine, QImage.Format_Grayscale8)
-
-        # self.label_img_gray.setPixmap(QPixmap.fromImage(QImg).scaled(
-        #     self.label_img_gray.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
-
+        # 显示 黑白图
+        rows, cols=inRange_hsv.shape
+        QImg = QImage(inRange_hsv.data, cols, rows,  QImage.Format_Grayscale8)
+        self.label_img_gray.setPixmap(QPixmap.fromImage(QImg).scaled(
+            self.label_img_gray.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
         cv2.waitKey(1)
         pass
