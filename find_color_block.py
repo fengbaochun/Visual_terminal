@@ -107,15 +107,14 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         temp.append(self.S_Slider_min.value())
         temp.append(self.V_Slider_max.value())
         temp.append(self.V_Slider_min.value())
-
         print("--------设置完读取位置-------------------------"+str(temp))
+
         self.flag = True
         
         # 清除控件内容
         self.TextEdit_hsv.clear() 
         # 更新字符串到控件
-        self.TextEdit_hsv.insertPlainText(str(data))                                  
-
+        self.TextEdit_hsv.insertPlainText(str(data))
         pass
 
     '''滑块'''
@@ -126,6 +125,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         global red_hsv
         global bule_hsv
         global yellow_hsv
+        # 防止触发信号，进入槽函数
         if  self.flag == True:
             temp_hsv=[]
 
@@ -181,10 +181,9 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
     @pyqtSlot()
     def on_blue_click(self):
-        # 清除选中
+        # 清除选中 并 修改滑块位置
         self.checkBox_Yellow.setCheckState(Qt.Unchecked)
         self.checkBox_Red.setCheckState(Qt.Unchecked)
-        # 修改滑块位置
         self.fill_data_to_Slider(blue_hsv)
         print("on_blue_click")
         pass
@@ -193,7 +192,6 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     def on_yellow_click(self):
         self.checkBox_Blue.setCheckState(Qt.Unchecked)
         self.checkBox_Red.setCheckState(Qt.Unchecked)
-
         self.fill_data_to_Slider(yellow_hsv)
         print("on_yellow_click")
         pass

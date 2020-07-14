@@ -14,10 +14,6 @@ color_dict = {'red': {'Lower': np.array([127, 60, 171]), 'Upper': np.array([188,
 class Color_block_recogn():
     tar_num = 0
     targe_contour=[]
-    # inRange_hsv = None
-    # img = None
-    # src_img
-    # inRang_img
     '''初始化参数'''
     def __init__(self,color_dict):
         self.color_thd = color_dict
@@ -27,10 +23,6 @@ class Color_block_recogn():
     def set_param(self,tar_dict,index):
 
         pass
-    
-    # def get_img(self):
-    #     return self.img
-    #     pass
 
         ''' 按照索引获取识别目标的信息 '''
     def get_target_info(self,img,index):
