@@ -81,6 +81,9 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.V_Slider_max.valueChanged.connect(self.Slider_change)   
         self.V_Slider_min.valueChanged.connect(self.Slider_change)   
 
+        # 按键槽函数
+        self.Button_arm_start.clicked.connect(self.Arm_work)  
+
         # 选择框
         self.checkBox_Red.clicked.connect(self.on_red_click) 
         self.checkBox_Yellow.clicked.connect(self.on_yellow_click) 
@@ -126,6 +129,20 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.TextEdit_hsv.clear() 
         # 更新字符串到控件
         self.TextEdit_hsv.insertPlainText(str(data))
+        pass
+
+    '''机械臂工作'''
+    def Arm_work(self):
+
+        if self.Button_arm_start.text() == "开始工作":
+            self.Button_arm_start.setText("正在工作")
+
+            print("正在工作")
+        else:
+            print("结束工作")
+            self.Button_arm_start.setText("开始工作")
+
+        
         pass
 
     '''滑块'''
