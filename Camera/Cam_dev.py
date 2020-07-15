@@ -18,6 +18,7 @@ video.set(cv2.CAP_PROP_EXPOSURE, 50) # 曝光 50
 
 '''摄像头调用类'''
 class Cam_dev():
+    port_list = []  #设备列表
     cameraMatrix = np.array([
                             [ 7.9641507015667764e+02, 0., 3.1577913194699374e+02], 
                             [0.,7.9661307355876215e+02, 2.1453452136833957e+02], 
@@ -46,6 +47,30 @@ class Cam_dev():
             print("打开摄像头失败")  
 
         pass
+    
+    # '''扫描摄像头端口 最大支持10个扫描'''
+    # def scan(self):
+    #     dev_list = []
+    #     num = 0
+    #     for i in range(10):
+    #         try:
+    #             temp_cap = cv2.VideoCapture(i)
+    #             if temp_cap.isOpened():
+    #                 dev_list.append(num)
+    #                 num = num + 1
+    #                 temp_cap.release()
+    #         except:
+    #             break
+    #             pass
+
+    #     print(dev_list)
+    #     pass
+
+    ''' 关闭摄像头 释放资源 '''
+    def close(self):
+        self.cap.release()
+        print("摄像头已释放")        
+        pass
 
     ''' 获取摄像头图像 '''
     ''' img_type : 0 原始图像 '''
@@ -68,7 +93,6 @@ def cam_main():
     print("矫正参数")
     print("matrix:\n",str(video.cameraMatrix))
     print("Coeffs:\n", str(video.distCoeffs))
-
     while True:
 
         cv2.imshow("dis_img", video.get_img(1))

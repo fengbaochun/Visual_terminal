@@ -1,5 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication,QMainWindow,QMessageBox
+from PyQt5.QtCore import QTimer
 #调用文件
 from Ui_mainwindow import Ui_MainWindow  
 from find_color_block import Find_color_block  
@@ -22,12 +23,12 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.tabWidget.setCurrentWidget(table_1)
 
         ''' 设置主界面的内容 '''
-        com = [] 
+        self.com = [] 
         # Com_dev = Serial_dev()
         for name in Com_dev.port_list:
-            com.append(str(name).split("-")[0])
+            self.com.append(str(name).split("-")[0])
         
-        self.Box_com.addItems(com)
+        self.Box_com.addItems(self.com)
 
         bps = ["9600", "115200"]
         self.Box_bps.addItems(bps)
@@ -41,8 +42,20 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.Box_stop.addItems(stop_bit)
         self.Box_stop.setCurrentIndex(0)
 
+        cam_num = ["0","1","2","3"]
+        self.Box_cam.addItems(cam_num)
+        self.Box_cam.setCurrentIndex(0)
+
         '''打开串口槽函数'''
         self.Button_opencom.clicked.connect(self.on_open_com)
+
+        '''打开摄像头槽函数'''
+        self.Button_open_cam.clicked.connect(self.on_open_cam)        
+
+        '''定时器刷新串口'''
+        self.timer = QTimer()  
+        self.timer.timeout.connect(self.refresh_port)
+        # self.timer.start(500)
     
     ''' 打开/关闭串口 '''
     def on_open_com(self):
@@ -57,18 +70,53 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             Com_dev.set_bps(bps_x)
             # 尝试打开
             try:
-                Com_dev.open()       
+                status = Com_dev.open()
+                if status == False:
+                    self.Button_opencom.setText("打开")
+                    QMessageBox.question(self, "打开错误", "串口已被占用或不存在!!!", QMessageBox.Yes , QMessageBox.Yes)                                    
+                    print("打开失败")
+                    return 
+                
                 # Com_dev.send("M1111\r\n")   
                 pass
             except:
-                # 退出确定框
-                QMessageBox.question(self, "打开错误", "串口已被占用或不存在!!!", QMessageBox.Yes , QMessageBox.Yes)
+                self.Button_opencom.setText("打开")
+                QMessageBox.question(self, "打开错误", "串口已被占用或不存在!!!", QMessageBox.Yes , QMessageBox.Yes)                
                 print("打开失败")
-                pass
+                return 
         else:
             # Com_dev.send("G0X280Y0Z0\r\n")  
             Com_dev.close()
             self.Button_opencom.setText("打开")
+        pass
+
+    def on_open_cam(self):
+        if self.Button_open_cam.text() == "打开":
+            self.Button_open_cam.setText("关闭")
+
+            # 获取界面配置
+            cam_x = str(self.Box_cam.currentText()) 
+            # 设置摄像头ID
+            
+            # 尝试打开
+            try:
+                pass
+            except:
+                return 
+
+            print("摄像头已打开")
+        else:
+            print("摄像头已关闭")
+            self.Button_open_cam.setText("打开")
+        pass
+
+    ''' 串口刷新 '''
+    def refresh_port(self):
+
+        pass
+        
+
+
         pass
 
 

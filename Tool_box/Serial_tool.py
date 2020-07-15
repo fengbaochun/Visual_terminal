@@ -44,7 +44,7 @@ class Serial_dev(object):
             self.status = False
             pass
 
-        return self.status,self.ser_v
+        return self.status
         
 
     ''' 关闭串口 '''
