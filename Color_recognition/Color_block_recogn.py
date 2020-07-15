@@ -76,7 +76,7 @@ class Color_block_recogn():
             for i in range(len(contours)):
                 # if (len(contours[i])>self.fea_p[2]) and (len(contours[i])<self.fea_p[3]):
                 # if (len(contours[i])>self.fea_p[2]):
-                if (len(contours[i])>40):
+                if (len(contours[i])>35):
                     # 最小外接矩形
                     min_rect = cv2.minAreaRect(contours[i])
                     # 矩形长宽
