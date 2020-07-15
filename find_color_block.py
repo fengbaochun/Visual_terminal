@@ -233,6 +233,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.label_img_gray.setPixmap(QPixmap.fromImage(QImg).scaled(
             self.label_img_gray.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
+        print(self.revogn.tar_info)
+
         cv2.waitKey(1)
         pass
 

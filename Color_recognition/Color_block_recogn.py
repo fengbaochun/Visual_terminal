@@ -57,8 +57,15 @@ class Color_block_recogn():
         self.rect_rgb = tar_list
         pass
 
-        ''' 按照索引获取识别目标的信息 '''
+    ''' 按照索引获取识别目标的信息 '''
     def get_target_img(self,img):
+        
+        # 临时缓存
+        temp_tar_info = {"num":0,
+        "center":[],
+        "angle":[]}
+        temp_num = 0
+
         # 高斯模糊
         gs_img = cv2.GaussianBlur(img, (5, 5), 0)                     
         # 转成 HSV 图
@@ -89,21 +96,18 @@ class Color_block_recogn():
                         cv2.circle(img,(int(min_rect[0][0]),int(min_rect[0][1])) ,2,(self.rect_rgb[0],self.rect_rgb[1], self.rect_rgb[2]),4)
                         cv2.drawContours(img, [np.int0(box_points)], 0, (self.rect_rgb[0],self.rect_rgb[1], self.rect_rgb[2]), 2)        
                         
-                        # 加入字典
-                        self.tar_info["center"].append(np.int0(min_rect[0]))
-                        self.tar_info["angle"].append(np.int0(min_rect[2]))  
-                        self.tar_num = self.tar_num + 1                    
-                        # print("中心坐标："+str(np.int0(min_rect[0]))+" "+"矩形长宽："+str(np.int0(min_rect[1]))+" "+"旋转角度："+str(np.int0(min_rect[2])))
+                        # 加入缓存字典               
+                        temp_tar_info["center"].insert(temp_num,np.int0(min_rect[0]))
+                        temp_tar_info["angle"].insert(temp_num,np.int0(min_rect[2]))  
 
-            self.tar_info["num"] = self.tar_num
-            # 打印字典内容
+                        temp_num = temp_num + 1
+
+            temp_tar_info["num"]=temp_num
+
+            # 将缓存字典更新到类变量中
+            self.tar_info.clear()
+            self.tar_info = temp_tar_info
             # print(self.tar_info)
-            # 清空字典
-            self.tar_info["center"].clear()
-            self.tar_info["angle"].clear()
-            self.tar_info["num"] = 0
-            self.tar_num = 0
-
         except:
             print("error------------->")
 
