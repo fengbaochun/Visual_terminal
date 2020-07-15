@@ -2,6 +2,7 @@ import serial
 import serial.tools.list_ports
 import threading
 from time import sleep
+from PyQt5.QtWidgets import QApplication,QMainWindow,QMessageBox
 
 
 class Serial_dev(object):
@@ -39,7 +40,7 @@ class Serial_dev(object):
                 self.status = False
             pass
         except:
-            print("打开失败,请重新检查串口是否被占用!!!")
+            print("打开失败,请重新检查串口是否被占用!!!")  
             self.status = False
             pass
 

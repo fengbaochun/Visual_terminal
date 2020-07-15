@@ -97,7 +97,7 @@ class Color_block_recogn():
 
             self.tar_info["num"] = self.tar_num
             # 打印字典内容
-            print(self.tar_info)
+            # print(self.tar_info)
             # 清空字典
             self.tar_info["center"].clear()
             self.tar_info["angle"].clear()
