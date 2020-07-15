@@ -31,7 +31,7 @@ global bule_hsv
 global yellow_hsv
 
 ''' 默认HSV '''
-red_hsv = [108, 190, 120, 255, 163, 223]
+red_hsv = [108, 190, 59, 255, 165, 255]
 blue_hsv = [74, 131, 107, 241, 146, 255]
 yellow_hsv = [30, 83, 60, 209, 156, 255]
 
@@ -233,7 +233,23 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.label_img_gray.setPixmap(QPixmap.fromImage(QImg).scaled(
             self.label_img_gray.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
-        print(self.revogn.tar_info)
+
+        # 更新识别结果到控件中
+        self.show_recong_result.clear()
+       
+        pos = []
+        for i in range(self.revogn.tar_info["num"]):
+            pos.insert(i,str(np.array(self.revogn.tar_info["center"])[i]))
+
+        angle = []
+        for i in range(self.revogn.tar_info["num"]):
+            angle.insert(i,str(np.array(self.revogn.tar_info["angle"])[i]))
+
+        temp = "数量:"+str(self.revogn.tar_info["num"])+"\n位置:"+str(pos)+"\n角度:"+str(angle)
+
+        self.show_recong_result.insertPlainText(str(temp))
+
+        # print(self.revogn.tar_info)
 
         cv2.waitKey(1)
         pass
