@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QCheckBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QImage, QPixmap
-# import main.py
+from Tool_box.Serial_tool import *
 
 
 
@@ -148,20 +148,20 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
     '''机械臂工作'''
     def Arm_work(self):
-
-        if self.Button_arm_start.text() == "开始工作":
-            self.Button_arm_start.setText("正在工作")
-
-            print(obj_all_info)
-            # main.Com_dev.send(self.G.home())
-            
-            print("正在工作")
-        else:
-            # main.Com_dev.send(self.G.init())
-            print("结束工作")
-            self.Button_arm_start.setText("开始工作")
-
         
+        if Com_dev.status == True:
+            if self.Button_arm_start.text() == "开始工作":
+                self.Button_arm_start.setText("正在工作")
+
+                print(obj_all_info)
+                Com_dev.send(self.G.init())
+                print("正在工作")
+            else:
+                Com_dev.send(self.G.home())
+                print("结束工作")
+                self.Button_arm_start.setText("开始工作")
+        else:
+            QMessageBox.question(self, '警告', '请先打开串口再操作', QMessageBox.Yes, QMessageBox.Yes)        
         pass
 
     '''滑块'''
@@ -277,15 +277,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
         img_src , inrange_img = self.revogn.get_target_img(self.video.get_img(1))
         img = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB) 
-
-        # 矩形左上角和右上角的坐标，绘制一个绿色矩形
-        # ptLeftTop = (60, 60)
-        # ptRightBottom = (260, 260)
-        # point_color = (0, 255, 0) # BGR
-        # thickness = 1 
-        # lineType = 4
-        # cv2.rectangle(img, ptLeftTop, ptRightBottom, point_color, thickness, lineType)
-
+        
+        # 画十字
         self.draw_pos(img)
 
         # 显示原图

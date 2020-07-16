@@ -50,6 +50,7 @@ class Serial_dev(object):
     ''' 关闭串口 '''
     def close(self):
         self.ser_v.close()
+        self.status = False
         print(str(self.port)+"已关闭")
         pass
 
@@ -88,11 +89,16 @@ class Serial_dev(object):
 
     pass
 
+'''用于给其他类调用'''
+global Com_dev
+Com_dev = Serial_dev()
 
-Gcode1="M1111\r\n"
-Gcode2="G0X255Y0Z180\r\n"
+
 
 def main():
+    Gcode1="M1111\r\n"
+    Gcode2="G0X255Y0Z180\r\n"
+
     dev = Serial_dev()
     dev.set_com("COM6")
     dev.set_bps(115200)

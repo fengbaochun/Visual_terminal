@@ -4,11 +4,9 @@ from PyQt5.QtCore import QTimer
 #调用文件
 from Ui_mainwindow import Ui_MainWindow  
 from find_color_block import Find_color_block  
-from Tool_box.Serial_tool import Serial_dev
+from Tool_box.Serial_tool import *
 
-global Com_dev
 
-Com_dev = Serial_dev()
 
 class MyMainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self,parent = None):
@@ -24,7 +22,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
         ''' 设置主界面的内容 '''
         self.com = [] 
-        # Com_dev = Serial_dev()
         for name in Com_dev.port_list:
             self.com.append(str(name).split("-")[0])
         
