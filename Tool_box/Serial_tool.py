@@ -1,4 +1,4 @@
-import serial 
+import serial,time
 import serial.tools.list_ports
 import threading
 from time import sleep
@@ -25,7 +25,6 @@ class Serial_dev(object):
         pass
     
     ''' 打开串口 '''
-    # def open(self, temp_port , temp_bps):
     def open(self):
         try:
             # 打开串口获取对象
@@ -34,7 +33,6 @@ class Serial_dev(object):
                 print("串口"+str(self.port)+"已打开")
                 print("波特率为："+str(self.bps))
                 self.status = True
-                # threading.Thread(target=self.read(), args=(self.ser_v,)).start()
             else:
                 print("打开失败")
                 self.status = False
@@ -60,7 +58,7 @@ class Serial_dev(object):
         if self.status:
             self.ser_v.write(data.encode("gbk"))
             print(str(len(data))+" 字节已发送成功")
-            sleep(1)
+            time.sleep(1)
 
         pass
 

@@ -1,5 +1,6 @@
 import sys
 import cv2
+import time
 import serial
 import serial.tools.list_ports
 import numpy as np
@@ -70,6 +71,7 @@ print(obj_p)
 red_place = [280,180]
 blue_place = [200,180]
 yellow_place = [140,180]
+place_pos = [red_place,blue_place,yellow_place]
 
 class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
@@ -173,34 +175,31 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
     '''搬运逻辑'''
     def move_obj(self):
-        # index = "red"
-        # for pos in obj_all_info[index]["center"]:
-        #     action = self.get_ARM_pos(pos[0],pos[1])
-        #     Com_dev.send(self.G.XYZ(int(215-action[0]),int(0-action[1]),-12))
-        #     print(pos)
+
         index = ["red","blue","yellow"]
-        # index = "red"
-        for i in range(len(obj_all_info[index[0]]["center"])):
-            y = obj_all_info[index[0]]["center"][i][0]
-            x = obj_all_info[index[0]]["center"][i][1]     
-            temp = self.get_ARM_pos(x,y)
-            #到达目标位置
-            Com_dev.send(self.G.XYZ(int(215-temp[0]),int(0-temp[1]),0))
-            # 下降
-            Com_dev.send(self.G.Z(-20))
-            # 吸气
-            Com_dev.send(self.G.M100x(0))
-            # 上升 一定高度
-            Com_dev.send(self.G.Z(20))
-            # 到放置位置上方
-            Com_dev.send(self.G.XYZ(red_place[0],red_place[1],120))
-            #下降Z
-            Com_dev.send(self.G.Z(50))
-            #漏气
-            Com_dev.send(self.G.M100x(2))
-            sleep(1)
-            # #漏气完抬高一下
-            # send_gcode_Z( Gcode_Z + 2 + Z_val*index + 10)
+        for j in range(len(index)):
+            for i in range(len(obj_all_info[index[j]]["center"])):
+                y = obj_all_info[index[j]]["center"][i][0]
+                x = obj_all_info[index[j]]["center"][i][1]     
+                temp = self.get_ARM_pos(x,y)
+                #到达目标位置
+                Com_dev.send(self.G.XYZ(int(215-temp[0]),int(0-temp[1]),0))
+                # 下降
+                Com_dev.send(self.G.Z(-20))
+                # 吸气
+                Com_dev.send(self.G.M100x(0))
+                # 上升 一定高度
+                Com_dev.send(self.G.Z(20))
+                # 到放置位置上方
+                Com_dev.send(self.G.XYZ(place_pos[j][0],place_pos[j][1],120))
+                #下降Z
+                Com_dev.send(self.G.Z(50))
+                #漏气
+                Com_dev.send(self.G.M100x(2))
+                sleep(1)
+                # #漏气完抬高一下
+                # send_gcode_Z( Gcode_Z + 2 + Z_val*index + 10)
+            time.sleep(2)
         
         Com_dev.send(self.G.M100x(2))
 
