@@ -10,6 +10,9 @@ from PyQt5.QtWidgets import QCheckBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QImage, QPixmap
+# import main.py
+
+
 
 from Ui_find_color_block import Ui_find_color_block
 
@@ -40,6 +43,16 @@ feature_param=[50,50,100,250]
 
 ''' rect 颜色'''
 rgb_param=[0,0,255]
+
+''' 目标所有信息 '''
+obj_all_info = {
+            "red":{},
+            "blue":{},
+            "yellow":{}
+            }
+
+
+
 
 class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
@@ -97,6 +110,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.timer.timeout.connect(self.get_data_result)
         self.timer.start(10) #定时
         
+        self.G = Gcode()
+
         print("初始化 ok")
  
         pass
@@ -137,8 +152,12 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         if self.Button_arm_start.text() == "开始工作":
             self.Button_arm_start.setText("正在工作")
 
+            print(obj_all_info)
+            # main.Com_dev.send(self.G.home())
+            
             print("正在工作")
         else:
+            # main.Com_dev.send(self.G.init())
             print("结束工作")
             self.Button_arm_start.setText("开始工作")
 
@@ -204,6 +223,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.fill_data_to_Slider(red_hsv)
         self.revogn.set_hsv(red_hsv)
         self.revogn.set_rect_rgb([0,0,255])
+        
         print("on_red_click")
         pass
 
@@ -216,6 +236,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         # 设置识别算法的参数
         self.revogn.set_hsv(blue_hsv)
         self.revogn.set_rect_rgb([255,0,0])
+
         print("on_blue_click")
         pass
 
@@ -229,12 +250,43 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
         print("on_yellow_click")
         pass
+    
+    '''保存识别信息，方便使用与机械臂搬运
+        根据不同的选项分别保存，强制使用者必须所有都要调整后，才能点击 “开始工作”
+    '''
+    def save_obj_info(self):
+        if self.checkBox_Red.isChecked():
+            obj_all_info["red"].update(self.revogn.tar_info)
+        elif self.checkBox_Blue.isChecked():
+            obj_all_info["blue"].update(self.revogn.tar_info)
+        elif self.checkBox_Yellow.isChecked():
+            obj_all_info["yellow"].update(self.revogn.tar_info)
+        # print(obj_all_info)
+        pass
+
+    '''对图像画标识，辅助校准'''
+    def draw_pos(self,img):
+        size = 20
+        # 画十字
+        cv2.line(img,(320-size,240), (320+size,240), (0, 0, 0), 2)
+        cv2.line(img,(320,240-size), (320,240+size), (0, 0, 0), 2)
+        pass
         
     '''定时器识别图像'''
     def get_data_result(self):
 
         img_src , inrange_img = self.revogn.get_target_img(self.video.get_img(1))
         img = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB) 
+
+        # 矩形左上角和右上角的坐标，绘制一个绿色矩形
+        # ptLeftTop = (60, 60)
+        # ptRightBottom = (260, 260)
+        # point_color = (0, 255, 0) # BGR
+        # thickness = 1 
+        # lineType = 4
+        # cv2.rectangle(img, ptLeftTop, ptRightBottom, point_color, thickness, lineType)
+
+        self.draw_pos(img)
 
         # 显示原图
         rows, cols, channels=img.shape
@@ -249,8 +301,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         QImg = QImage(inrange_img.data, cols, rows,  QImage.Format_Grayscale8)
         self.label_img_gray.setPixmap(QPixmap.fromImage(QImg).scaled(
             self.label_img_gray.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
-
-
+        
         # 更新识别结果到控件中
         self.show_recong_result.clear()
        
@@ -267,15 +318,52 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.show_recong_result.insertPlainText(str(temp))
 
         # print(self.revogn.tar_info)
+        self.save_obj_info()
 
         cv2.waitKey(1)
         pass
 
-    
-    def init(self):
+    pass
 
+'''
+gcode 封装
+'''
+class Gcode(object):
+    datum = [210,0,-10]
+    '''初始化'''
+    def __init__(self):
         pass
 
+    def init(self):
+        return "M1111\r\n"
+    
+    '''机械臂最高位置'''
+    def home(self):
+        return self.XYZ(255,0,180)
+    
+    def Z(self,z):
+        temp = "G0"+"Z"+str(z)+"\r\n"
+        return temp        
+        pass
+
+    def X(self):
+        pass
+
+    def Y(self):
+        pass
+
+    def XYZ(self,x,y,z):
+        temp = "G0"+"X"+str(x)+"Y"+str(y)+"Z"+str(z)+"\r\n"
+        return temp
+
+    def XY(self,x,y):
+        temp = "G0"+"X"+str(x)+"Y"+str(y)+"\r\n"
+        return temp
+
+    def M100x(self,x):
+        return "M100"+str(x)+"\r\n"
+
+    pass
 
 # https://www.cnblogs.com/komean/p/11209780.html
 # https://blog.csdn.net/DerrickRose25/article/details/86744787
