@@ -3,6 +3,7 @@ import cv2
 import serial
 import serial.tools.list_ports
 import numpy as np
+import math
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox,QApplication
 from PyQt5.QtCore import QTimer
@@ -34,9 +35,9 @@ global bule_hsv
 global yellow_hsv
 
 ''' 默认HSV '''
-red_hsv = [108, 190, 59, 255, 165, 255]
+red_hsv = [108, 190, 59, 255, 121, 255]
 blue_hsv = [74, 131, 107, 241, 146, 255]
-yellow_hsv = [30, 83, 60, 209, 156, 255]
+yellow_hsv = [30, 83, 125, 209, 143, 255]
 
 '''特征参数,长 宽 边缘阈值'''
 feature_param=[50,50,100,250]
@@ -51,14 +52,26 @@ obj_all_info = {
             "yellow":{}
             }
 
+'''
+    最高位置的标定参数
+    可以根据据情况调整
+'''
+# obj_fact_size = 30 # mm
+# obj_img_size = 69 # 像素
 
+obj_fact_size = 29 # mm
+obj_img_size = 69 # 像素
 
+obj_p = float(obj_img_size)/float(obj_fact_size) 
+# obj_p = 2
+print(obj_p)
 
 class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
     hsv=[]
     num=0
     flag = True     #防止设置滑块位置时再次进入标志
+    data_status = True
 
     '''初始化'''
     def __init__(self):
@@ -146,20 +159,44 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.TextEdit_hsv.insertPlainText(str(data))
         pass
 
+    '''根据图像坐标转换为实际坐标'''
+    def get_ARM_pos(self,x,y):
+        # 基准坐标为中心坐标
+        y = math.ceil(float((y-320)*1000) / float(obj_p) / float(1000))
+        x = math.ceil(float((x-240)*1000) / float(obj_p) / float(1000))   
+        return [x,y]
+
+    '''搬运逻辑'''
+    def move_obj(self):
+        index = "yellow"
+
+        y = obj_all_info[index]["center"][0][0]
+        x = obj_all_info[index]["center"][0][1]     
+        temp = self.get_ARM_pos(x,y)
+        Com_dev.send(self.G.XYZ(int(215-temp[0]),int(0-temp[1]),-12))
+
+        pass
+
     '''机械臂工作'''
     def Arm_work(self):
         
         if Com_dev.status == True:
             if self.Button_arm_start.text() == "开始工作":
                 self.Button_arm_start.setText("正在工作")
-
+                # 关掉图像处理及收集数据
+                self.data_status = False
                 print(obj_all_info)
-                Com_dev.send(self.G.init())
+                
+                self.move_obj()
+                
                 print("正在工作")
             else:
+                # Com_dev.send(self.G.init())
                 Com_dev.send(self.G.home())
                 print("结束工作")
                 self.Button_arm_start.setText("开始工作")
+                # 开启图像处理及收集数据
+                self.data_status = True
         else:
             QMessageBox.question(self, '警告', '请先打开串口再操作', QMessageBox.Yes, QMessageBox.Yes)        
         pass
@@ -274,44 +311,44 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         
     '''定时器识别图像'''
     def get_data_result(self):
+        if self.data_status == True:
+            img_src , inrange_img = self.revogn.get_target_img(self.video.get_img(1))
+            img = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB) 
+            
+            # 画十字
+            self.draw_pos(img)
 
-        img_src , inrange_img = self.revogn.get_target_img(self.video.get_img(1))
-        img = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB) 
+            # 显示原图
+            rows, cols, channels=img.shape
+            bytesPerLine = channels * cols
+            QImg = QImage(img.data, cols, rows, bytesPerLine, QImage.Format_RGB888)
+
+            self.label_img.setPixmap(QPixmap.fromImage(QImg).scaled(
+                self.label_img.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
+
+            # 显示黑白图
+            rows, cols=inrange_img.shape
+            QImg = QImage(inrange_img.data, cols, rows,  QImage.Format_Grayscale8)
+            self.label_img_gray.setPixmap(QPixmap.fromImage(QImg).scaled(
+                self.label_img_gray.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            
+            # 更新识别结果到控件中
+            self.show_recong_result.clear()
         
-        # 画十字
-        self.draw_pos(img)
+            pos = []
+            for i in range(self.revogn.tar_info["num"]):
+                pos.insert(i,str(np.array(self.revogn.tar_info["center"])[i]))
 
-        # 显示原图
-        rows, cols, channels=img.shape
-        bytesPerLine = channels * cols
-        QImg = QImage(img.data, cols, rows, bytesPerLine, QImage.Format_RGB888)
+            angle = []
+            for i in range(self.revogn.tar_info["num"]):
+                angle.insert(i,str(np.array(self.revogn.tar_info["angle"])[i]))
 
-        self.label_img.setPixmap(QPixmap.fromImage(QImg).scaled(
-            self.label_img.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            temp = "数量:"+str(self.revogn.tar_info["num"])+"\n位置:"+str(pos)+"\n角度:"+str(angle)
 
-        # 显示黑白图
-        rows, cols=inrange_img.shape
-        QImg = QImage(inrange_img.data, cols, rows,  QImage.Format_Grayscale8)
-        self.label_img_gray.setPixmap(QPixmap.fromImage(QImg).scaled(
-            self.label_img_gray.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
-        
-        # 更新识别结果到控件中
-        self.show_recong_result.clear()
-       
-        pos = []
-        for i in range(self.revogn.tar_info["num"]):
-            pos.insert(i,str(np.array(self.revogn.tar_info["center"])[i]))
+            self.show_recong_result.insertPlainText(str(temp))
+    
 
-        angle = []
-        for i in range(self.revogn.tar_info["num"]):
-            angle.insert(i,str(np.array(self.revogn.tar_info["angle"])[i]))
-
-        temp = "数量:"+str(self.revogn.tar_info["num"])+"\n位置:"+str(pos)+"\n角度:"+str(angle)
-
-        self.show_recong_result.insertPlainText(str(temp))
-
-        # print(self.revogn.tar_info)
-        self.save_obj_info()
+            self.save_obj_info()
 
         cv2.waitKey(1)
         pass
