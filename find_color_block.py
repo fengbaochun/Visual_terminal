@@ -66,6 +66,11 @@ obj_p = float(obj_img_size)/float(obj_fact_size)
 # obj_p = 2
 print(obj_p)
 
+'''放置位置 [ x , y ] '''
+red_place = [280,180]
+blue_place = [200,180]
+yellow_place = [140,180]
+
 class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
     hsv=[]
@@ -168,12 +173,36 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
     '''搬运逻辑'''
     def move_obj(self):
-        index = "yellow"
-
-        y = obj_all_info[index]["center"][0][0]
-        x = obj_all_info[index]["center"][0][1]     
-        temp = self.get_ARM_pos(x,y)
-        Com_dev.send(self.G.XYZ(int(215-temp[0]),int(0-temp[1]),-12))
+        # index = "red"
+        # for pos in obj_all_info[index]["center"]:
+        #     action = self.get_ARM_pos(pos[0],pos[1])
+        #     Com_dev.send(self.G.XYZ(int(215-action[0]),int(0-action[1]),-12))
+        #     print(pos)
+        index = ["red","blue","yellow"]
+        # index = "red"
+        for i in range(len(obj_all_info[index[0]]["center"])):
+            y = obj_all_info[index[0]]["center"][i][0]
+            x = obj_all_info[index[0]]["center"][i][1]     
+            temp = self.get_ARM_pos(x,y)
+            #到达目标位置
+            Com_dev.send(self.G.XYZ(int(215-temp[0]),int(0-temp[1]),0))
+            # 下降
+            Com_dev.send(self.G.Z(-20))
+            # 吸气
+            Com_dev.send(self.G.M100x(0))
+            # 上升 一定高度
+            Com_dev.send(self.G.Z(20))
+            # 到放置位置上方
+            Com_dev.send(self.G.XYZ(red_place[0],red_place[1],120))
+            #下降Z
+            Com_dev.send(self.G.Z(50))
+            #漏气
+            Com_dev.send(self.G.M100x(2))
+            sleep(1)
+            # #漏气完抬高一下
+            # send_gcode_Z( Gcode_Z + 2 + Z_val*index + 10)
+        
+        Com_dev.send(self.G.M100x(2))
 
         pass
 

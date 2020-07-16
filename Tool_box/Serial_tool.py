@@ -60,6 +60,7 @@ class Serial_dev(object):
         if self.status:
             self.ser_v.write(data.encode("gbk"))
             print(str(len(data))+" 字节已发送成功")
+            sleep(1)
 
         pass
 
