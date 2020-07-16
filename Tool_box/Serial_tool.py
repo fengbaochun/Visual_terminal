@@ -57,8 +57,19 @@ class Serial_dev(object):
         # 判断串口状态
         if self.status:
             self.ser_v.write(data.encode("gbk"))
-            print(str(len(data))+" 字节已发送成功")
-            time.sleep(1)
+            print(data)
+            while self.ser_v.inWaiting() == 0:
+
+                n = self.ser_v.inWaiting()#获取接收到的数据长度
+                if n: 
+                    #读取数据并将数据存入data
+                    rev_data = self.ser_v.read(n)
+                    #输出接收到的数据
+                    print('get data from serial port:', rev_data)
+
+            
+            # time.sleep(1)
+        pass
 
         pass
 
@@ -114,3 +125,5 @@ if __name__ == "__main__":
 
 # https://www.jianshu.com/p/b5ba170a25aa
 # https://www.cnblogs.com/mangojun/p/10558069.html
+# https://www.jb51.net/article/162891.htm
+# https://www.jb51.net/article/162891.htm

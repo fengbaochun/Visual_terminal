@@ -101,7 +101,7 @@ class Color_block_recogn():
 
                         temp_num = temp_num + 1
                         # print("中心坐标："+str(np.int0(min_rect[0]))+" "+"矩形长宽："+str(np.int0(min_rect[1]))+" "+"旋转角度："+str(np.int0(min_rect[2])))
-                        print("矩形长宽："+str(np.int0(min_rect[1])))
+                        # print("矩形长宽："+str(np.int0(min_rect[1])))
 
             temp_tar_info["num"]=temp_num
 

@@ -199,7 +199,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                 sleep(1)
                 # #漏气完抬高一下
                 # send_gcode_Z( Gcode_Z + 2 + Z_val*index + 10)
-            time.sleep(2)
+            time.sleep(1)
         
         Com_dev.send(self.G.M100x(2))
 
