@@ -132,6 +132,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 if __name__ =='__main__':
     app = QApplication(sys.argv)
     myWin = MyMainWindow()
+    # 禁止修改窗口大小
+    myWin.setFixedSize(myWin.width(), myWin.height())
     myWin.show()
     sys.exit(app.exec_())
 

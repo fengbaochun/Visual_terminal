@@ -316,7 +316,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         
         if Com_dev.status == True:
             if self.Button_arm_start.text() == "开始工作":
-                self.Button_arm_start.setText("正在工作")
+                # self.Button_arm_start.setText("工作中")
                 # 关掉图像处理及收集数据
                 self.data_status = False
                 print(obj_all_info)
@@ -453,12 +453,12 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     '''定时器识别图像'''
     def get_data_result(self):
         if self.data_status == True:
+            # 放置畸变校正出问题，出问题使用没有畸变校正的图像
             try:
                 img_src , inrange_img = self.revogn.get_target_img(self.video.get_img(1))
             except :
                 img_src , inrange_img = self.revogn.get_target_img(self.video.get_img(0))
                 pass
-            # img_src , inrange_img = self.revogn.get_target_img(self.video.get_img(1))
             img = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB) 
             
             # 画十字
