@@ -52,7 +52,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         '''定时器刷新串口'''
         self.timer = QTimer()  
         self.timer.timeout.connect(self.refresh_port)
-        # self.timer.start(500)
+        self.timer.start(500)
     
     ''' 打开/关闭串口 '''
     def on_open_com(self):
@@ -113,11 +113,20 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     ''' 串口刷新 '''
     def refresh_port(self):
 
+        # self.com.clear()
+        # self.Box_com.clear()
+        # i = 0
+        # for name in Com_dev.port_list:
+        #     self.com.insert(i,str(name).split("-")[0])
+        #     i = i + 1
+        
+        # self.Box_com.addItems(self.com)
+
         pass
         
 
 
-        pass
+    pass
 
 
 if __name__ =='__main__':

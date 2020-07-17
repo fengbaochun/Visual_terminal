@@ -53,6 +53,7 @@ obj_all_info = {
             "yellow":{}
             }
 
+
 '''
     最高位置的标定参数
     可以根据据情况调整
@@ -71,7 +72,12 @@ print(obj_p)
 red_place = [280,180]
 blue_place = [200,180]
 yellow_place = [140,180]
-place_pos = [red_place,blue_place,yellow_place]
+# place_pos = [red_place,blue_place,yellow_place]
+place_pos = {   "red":red_place,
+                "blue":blue_place,
+                "yellow":yellow_place
+            }
+
 
 class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
@@ -176,40 +182,42 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     '''搬运逻辑'''
     def move_obj(self):
 
-        index = ["red","blue","yellow"]
-        for j in range(len(index)):
-            for i in range(len(obj_all_info[index[j]]["center"])):
-                y = obj_all_info[index[j]]["center"][i][0]
-                x = obj_all_info[index[j]]["center"][i][1]     
-                temp = self.get_ARM_pos(x,y)
-                #到达目标位置
-                Com_dev.send(self.G.XYZ(int(215-temp[0]),int(0-temp[1]),0))
-                Com_dev.read()
-                # 下降
-                Com_dev.send(self.G.Z(-20))
-                Com_dev.read()
-                # 吸气
-                Com_dev.send(self.G.M100x(0))
-                sleep(0.1)
-                # Com_dev.read()
-                # 上升 一定高度
-                Com_dev.send(self.G.Z(20))
-                Com_dev.read()
-                # 到放置位置上方
-                Com_dev.send(self.G.XYZ(place_pos[j][0],place_pos[j][1],120))
-                Com_dev.read()
-                #下降Z
-                Com_dev.send(self.G.Z(50))
-                Com_dev.read()
-                #漏气
-                Com_dev.send(self.G.M100x(2))
-                # Com_dev.read()
-                sleep(0.1)
-                
-                # #漏气完抬高一下
-                # send_gcode_Z( Gcode_Z + 2 + Z_val*index + 10)        
-        Com_dev.send(self.G.M100x(2))
+        for dict_name in obj_all_info:
+            try:
+                for i in range(len(obj_all_info[dict_name]["center"])):
+                    y = obj_all_info[dict_name]["center"][i][0]
+                    x = obj_all_info[dict_name]["center"][i][1]     
+                    temp = self.get_ARM_pos(x,y)
+                    #到达目标位置
+                    Com_dev.send(self.G.XYZ(int(215-temp[0]),int(0-temp[1]),0))
+                    Com_dev.read()
+                    # 下降
+                    Com_dev.send(self.G.Z(-20))
+                    Com_dev.read()
+                    # 吸气
+                    Com_dev.send(self.G.M100x(0))
+                    sleep(0.1)
+                    # Com_dev.read()
+                    # 上升 一定高度
+                    Com_dev.send(self.G.Z(20))
+                    Com_dev.read()
+                    # 到放置位置上方
+                    Com_dev.send(self.G.XYZ(place_pos[dict_name][0],place_pos[dict_name][1],120))
+                    Com_dev.read()
+                    #下降Z
+                    Com_dev.send(self.G.Z(50))
+                    Com_dev.read()
+                    #漏气
+                    Com_dev.send(self.G.M100x(2))
+                    # Com_dev.read()
+                    sleep(0.1)
+                    
+                    # #漏气完抬高一下
+                    # send_gcode_Z( Gcode_Z + 2 + Z_val*index + 10)        
 
+            except:
+                print(dict_name+"没有选择")
+                pass
         pass
 
     def test(self):
