@@ -6,7 +6,7 @@ import serial.tools.list_ports
 import numpy as np
 import math
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QMessageBox,QApplication
+from PyQt5.QtWidgets import QMessageBox,QApplication,QSpinBox
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QCheckBox
 from PyQt5.QtCore import Qt
@@ -22,7 +22,6 @@ from Color_recognition.Color_block_recogn import Color_block_recogn
 
 from Camera.Cam_dev import Cam_dev
 
-tar_color = 'red'
 
 color_dict ={   'red':      [127,197,188,60,197,255],
                 'blue':     [50,197,188,80,197,255],
@@ -65,14 +64,12 @@ obj_fact_size = 29 # mm
 obj_img_size = 69 # 像素
 
 obj_p = float(obj_img_size)/float(obj_fact_size) 
-# obj_p = 2
 print(obj_p)
 
-'''放置位置 [ x , y ] '''
-red_place = [280,180]
-blue_place = [200,180]
-yellow_place = [140,180]
-# place_pos = [red_place,blue_place,yellow_place]
+'''放置位置 [ x , y ,z] 只使用xy,z用来占位，调整的时候使用 '''
+red_place = [280,180,0]
+blue_place = [200,180,0]
+yellow_place = [140,180,0]
 place_pos = {   "red":red_place,
                 "blue":blue_place,
                 "yellow":yellow_place
@@ -85,7 +82,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     num=0
     flag = True     #防止设置滑块位置时再次进入标志
     data_status = True
-
+    change_pos = [280,0,0]
     '''初始化'''
     def __init__(self):
         super(Find_color_block, self).__init__()
@@ -127,6 +124,23 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.checkBox_Red.clicked.connect(self.on_red_click) 
         self.checkBox_Yellow.clicked.connect(self.on_yellow_click) 
         self.checkBox_Blue.clicked.connect(self.on_blue_click) 
+
+        # 调整机械臂目标位置
+        self.show_red_place.clear()
+        self.show_red_place.insertPlainText(str(place_pos["red"]))
+        self.show_blue_place.insertPlainText(str(place_pos["blue"]))
+        self.show_yellow_place.insertPlainText(str(place_pos["yellow"]))
+        # 设置当前数值为10
+        self.spinBox.setValue(10)
+
+        self.Button_x_add.clicked.connect(self.change_ARM_tar_pos) 
+        self.Button_x_less.clicked.connect(self.change_ARM_tar_pos) 
+        self.Button_y_add.clicked.connect(self.change_ARM_tar_pos) 
+        self.Button_y_less.clicked.connect(self.change_ARM_tar_pos) 
+        self.Button_z_add.clicked.connect(self.change_ARM_tar_pos) 
+        self.Button_z_less.clicked.connect(self.change_ARM_tar_pos) 
+        self.Button_rest.clicked.connect(self.change_ARM_tar_pos)
+        self.Button_home.clicked.connect(self.change_ARM_tar_pos)
         
         '''初始化摄像头以及识别相关的'''
         self.video = Cam_dev(0,640,480)
@@ -223,8 +237,78 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                 pass
         pass
 
-    def test(self):
-        print("回调ok")
+    '''获取机械臂当前位置，下位机暂时没有支持'''
+    def get_current_ARM_pos(self):
+        "G0X280Y0Z0"
+        return [280,0,0]
+        pass
+    
+    '''获取调整后的数值'''
+    def get_change_val(self,sender,index):
+        
+        val = self.spinBox.value()
+
+        if sender == "X+":
+            place_pos[index][0] = place_pos[index][0] + val            
+        elif sender == "X-":
+            place_pos[index][0] = place_pos[index][0] - val     
+        elif sender == "Y+":
+            place_pos[index][1] = place_pos[index][1] + val 
+        elif sender == "Y-":
+            place_pos[index][1] = place_pos[index][1] - val  
+        elif sender == "Z+":
+            place_pos[index][2] = place_pos[index][2] + val 
+        elif sender == "Z-":
+            place_pos[index][2] = place_pos[index][2] - val 
+        elif sender == "REST":
+            place_pos["red"] = [280,180,0]
+            place_pos["blue"] = [200,180,0]
+            place_pos["yellow"] = [140,180,0]
+
+        print(place_pos[index])
+        
+        '''同步控件内容'''
+        self.show_red_place.clear()
+        self.show_red_place.insertPlainText(str(place_pos["red"]))
+        self.show_blue_place.clear()
+        self.show_blue_place.insertPlainText(str(place_pos["blue"]))
+        self.show_yellow_place.clear()
+        self.show_yellow_place.insertPlainText(str(place_pos["yellow"]))
+        pass
+    
+    '''修改'''
+    def change_ARM_tar_pos(self):
+        sender = self.sender().text()
+        print(sender+ ' 是发送者')
+        if sender == "HOME":
+            # 回到home调整 颜色
+            Com_dev.send(self.G.home())
+            Com_dev.read()      
+        else:
+            # 调整要放的位置
+            try:
+                if self.checkBox_Red.isChecked():
+                    self.get_change_val(sender,"red")
+                    Com_dev.send(self.G.XYZ(place_pos["red"][0],place_pos["red"][1],place_pos["red"][2]))
+                    Com_dev.read()
+                elif self.checkBox_Blue.isChecked():
+                    self.get_change_val(sender,"blue")
+                    Com_dev.send(self.G.XYZ(place_pos["blue"][0],place_pos["blue"][1],place_pos["blue"][2]))
+                    Com_dev.read()
+                elif self.checkBox_Yellow.isChecked():
+                    self.get_change_val(sender,"yellow")
+                    Com_dev.send(self.G.XYZ(place_pos["yellow"][0],place_pos["yellow"][1],place_pos["yellow"][2]))
+                    Com_dev.read()      
+            except:              
+                '''没有打开串口需要提示'''
+                place_pos["red"] = [280,180,0]
+                place_pos["blue"] = [200,180,0]
+                place_pos["yellow"] = [140,180,0]
+                QMessageBox.question(self, "打开错误", "请先打开串口再操作!!!", QMessageBox.Yes , QMessageBox.Yes)              
+                print("打开失败")
+                pass   
+            print(place_pos)
+
         pass
 
     '''机械臂工作'''
@@ -369,7 +453,12 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     '''定时器识别图像'''
     def get_data_result(self):
         if self.data_status == True:
-            img_src , inrange_img = self.revogn.get_target_img(self.video.get_img(1))
+            try:
+                img_src , inrange_img = self.revogn.get_target_img(self.video.get_img(1))
+            except :
+                img_src , inrange_img = self.revogn.get_target_img(self.video.get_img(0))
+                pass
+            # img_src , inrange_img = self.revogn.get_target_img(self.video.get_img(1))
             img = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB) 
             
             # 画十字

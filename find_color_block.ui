@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1280</width>
-    <height>854</height>
+    <height>866</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -89,7 +89,7 @@
      <x>650</x>
      <y>610</y>
      <width>621</width>
-     <height>241</height>
+     <height>251</height>
     </rect>
    </property>
    <property name="font">
@@ -107,7 +107,7 @@
       <x>0</x>
       <y>10</y>
       <width>631</width>
-      <height>261</height>
+      <height>241</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -154,7 +154,7 @@
        <x>10</x>
        <y>190</y>
        <width>601</width>
-       <height>41</height>
+       <height>51</height>
       </rect>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -414,7 +414,7 @@
       <x>240</x>
       <y>20</y>
       <width>351</width>
-      <height>131</height>
+      <height>121</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout">
@@ -464,22 +464,9 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QTextBrowser" name="yellow_blue_place"/>
+      <widget class="QTextBrowser" name="show_yellow_place"/>
      </item>
     </layout>
-   </widget>
-   <widget class="QProgressBar" name="progressBar">
-    <property name="geometry">
-     <rect>
-      <x>230</x>
-      <y>310</y>
-      <width>371</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="value">
-     <number>24</number>
-    </property>
    </widget>
    <widget class="QGroupBox" name="groupBox_5">
     <property name="geometry">
@@ -514,7 +501,7 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="Button_x_add">
       <property name="geometry">
        <rect>
         <x>50</x>
@@ -527,7 +514,7 @@
        <string>X+</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_5">
+     <widget class="QPushButton" name="Button_z_add">
       <property name="geometry">
        <rect>
         <x>50</x>
@@ -540,7 +527,7 @@
        <string>Z+</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_6">
+     <widget class="QPushButton" name="Button_z_less">
       <property name="geometry">
        <rect>
         <x>50</x>
@@ -553,7 +540,7 @@
        <string>Z-</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_4">
+     <widget class="QPushButton" name="Button_x_less">
       <property name="geometry">
        <rect>
         <x>50</x>
@@ -566,7 +553,7 @@
        <string>X-</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_3">
+     <widget class="QPushButton" name="Button_y_add">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -579,7 +566,7 @@
        <string>Y+</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_2">
+     <widget class="QPushButton" name="Button_y_less">
       <property name="geometry">
        <rect>
         <x>130</x>
@@ -622,17 +609,30 @@
       <string>单位调整数值</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_7">
+    <widget class="QPushButton" name="Button_rest">
      <property name="geometry">
       <rect>
        <x>20</x>
        <y>220</y>
-       <width>171</width>
+       <width>81</width>
        <height>41</height>
       </rect>
      </property>
      <property name="text">
-      <string>OK</string>
+      <string>REST</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="Button_home">
+     <property name="geometry">
+      <rect>
+       <x>110</x>
+       <y>220</y>
+       <width>81</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>HOME</string>
      </property>
     </widget>
    </widget>
