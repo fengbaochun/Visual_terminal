@@ -84,7 +84,7 @@ class Serial_dev(object):
                 data = self.ser_v.read_until()
                 if "ok" in str(data):
                     print(str(data))
-                    sleep(1.5)
+                    sleep(1)
                     return 
 
         pass

@@ -69,7 +69,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             try:
                 status = Com_dev.open()
                 Com_dev.send("M1111\r\n")
-                Com_dev.send("G0X255Y0Z180\r\n")
+                Com_dev.send("G0X255Y0Z180F4000\r\n")
+                
                 if status == False:
                     self.Button_opencom.setText("打开")
                     QMessageBox.question(self, "打开错误", "串口已被占用或不存在!!!", QMessageBox.Yes , QMessageBox.Yes)                                    
