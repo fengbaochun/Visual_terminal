@@ -184,25 +184,34 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                 temp = self.get_ARM_pos(x,y)
                 #到达目标位置
                 Com_dev.send(self.G.XYZ(int(215-temp[0]),int(0-temp[1]),0))
+                Com_dev.read()
                 # 下降
                 Com_dev.send(self.G.Z(-20))
+                Com_dev.read()
                 # 吸气
                 Com_dev.send(self.G.M100x(0))
+                Com_dev.read()
                 # 上升 一定高度
                 Com_dev.send(self.G.Z(20))
+                Com_dev.read()
                 # 到放置位置上方
                 Com_dev.send(self.G.XYZ(place_pos[j][0],place_pos[j][1],120))
+                Com_dev.read()
                 #下降Z
                 Com_dev.send(self.G.Z(50))
+                Com_dev.read()
                 #漏气
                 Com_dev.send(self.G.M100x(2))
+                Com_dev.read()
                 sleep(1)
                 # #漏气完抬高一下
-                # send_gcode_Z( Gcode_Z + 2 + Z_val*index + 10)
-            time.sleep(1)
-        
+                # send_gcode_Z( Gcode_Z + 2 + Z_val*index + 10)        
         Com_dev.send(self.G.M100x(2))
 
+        pass
+
+    def test(self):
+        print("回调ok")
         pass
 
     '''机械臂工作'''
