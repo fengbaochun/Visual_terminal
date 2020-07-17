@@ -190,7 +190,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                 Com_dev.read()
                 # 吸气
                 Com_dev.send(self.G.M100x(0))
-                Com_dev.read()
+                sleep(0.1)
+                # Com_dev.read()
                 # 上升 一定高度
                 Com_dev.send(self.G.Z(20))
                 Com_dev.read()
@@ -202,7 +203,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                 Com_dev.read()
                 #漏气
                 Com_dev.send(self.G.M100x(2))
-                Com_dev.read()
+                # Com_dev.read()
+                sleep(0.1)
                 
                 # #漏气完抬高一下
                 # send_gcode_Z( Gcode_Z + 2 + Z_val*index + 10)        
