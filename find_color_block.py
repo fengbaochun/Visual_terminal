@@ -202,15 +202,18 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                     Com_dev.send(self.G.Z(20))
                     Com_dev.read()
                     # 到放置位置上方
-                    Com_dev.send(self.G.XYZ(place_pos[dict_name][0],place_pos[dict_name][1],120))
+                    Com_dev.send(self.G.XYZ(place_pos[dict_name][0],place_pos[dict_name][1],-5+30*i+40))
                     Com_dev.read()
                     #下降Z
-                    Com_dev.send(self.G.Z(50))
+                    Com_dev.send(self.G.Z(-5+30*i))
                     Com_dev.read()
                     #漏气
                     Com_dev.send(self.G.M100x(2))
                     # Com_dev.read()
                     sleep(0.1)
+                    # 上升，避免撞到
+                    Com_dev.send(self.G.Z(-5+30*i+40))
+                    Com_dev.read()
                     
                     # #漏气完抬高一下
                     # send_gcode_Z( Gcode_Z + 2 + Z_val*index + 10)        
@@ -236,7 +239,14 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                 
                 self.move_obj()
                 
-                print("正在工作")
+                for i in obj_all_info:
+                    obj_all_info[i].clear()
+
+                print(obj_all_info)
+
+                Com_dev.send(self.G.home())
+                
+                print("工作结束")
             else:
                 # Com_dev.send(self.G.init())
                 Com_dev.send(self.G.home())
