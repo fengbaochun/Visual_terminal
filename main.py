@@ -5,7 +5,7 @@ from PyQt5.QtCore import QTimer
 from Ui_mainwindow import Ui_MainWindow  
 from find_color_block import Find_color_block  
 from Tool_box.Serial_tool import *
-
+from Cam_dev import *
 
 
 class MyMainWindow(QMainWindow, Ui_MainWindow):
@@ -14,11 +14,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         #设置软件title
         self.setWindowTitle("视觉终端")
-        #在table中添加demo,并在类中实现功能
-        table_1 = Find_color_block()
-        self.tabWidget.insertTab(0,table_1,"色块识别")
-        # 设置当前显示的界面 默认界面
-        self.tabWidget.setCurrentWidget(table_1)
 
         ''' 设置主界面的内容 '''
         self.com = [] 
@@ -38,8 +33,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         stop_bit = ["1位","1.5位","2位"]
         self.Box_stop.addItems(stop_bit)
         self.Box_stop.setCurrentIndex(0)
+        
+        '''扫描摄像头设备，并将设备编号添加到控件'''
+        cam_num = video.scan()
+        print("当前摄像头状态："+str(video.status))
 
-        cam_num = ["0","1","2","3"]
         self.Box_cam.addItems(cam_num)
         self.Box_cam.setCurrentIndex(0)
 
@@ -53,6 +51,12 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.timer = QTimer()  
         self.timer.timeout.connect(self.refresh_port)
         self.timer.start(500)
+
+        '''在table中添加demo,并在类中实现功能'''
+        table_1 = Find_color_block()
+        self.tabWidget.insertTab(0,table_1,"色块识别")
+        # 设置当前显示的界面 默认界面
+        self.tabWidget.setCurrentWidget(table_1)
     
     ''' 打开/关闭串口 '''
     def on_open_com(self):
@@ -93,20 +97,19 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def on_open_cam(self):
         if self.Button_open_cam.text() == "打开":
             self.Button_open_cam.setText("关闭")
-
             # 获取界面配置
             cam_x = str(self.Box_cam.currentText()) 
-            # 设置摄像头ID
-            
-            # 尝试打开
+            # 尝试打开 
             try:
+                video.open(int(cam_x),640,480)
+                print("摄像头已打开")
                 pass
             except:
-                return 
-
-            print("摄像头已打开")
+                pass             
         else:
+            video.close()
             print("摄像头已关闭")
+            print(Cam_dev.status)
             self.Button_open_cam.setText("打开")
         pass
 

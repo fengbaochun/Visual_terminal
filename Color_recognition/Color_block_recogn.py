@@ -1,7 +1,8 @@
 import cv2
 import numpy as np
-from Cam_dev import Cam_dev
 import math
+
+from Cam_dev import *
 
 # 目标颜色
 tar_color = 'green'
@@ -19,8 +20,6 @@ feature_param=[40,40,60,250,20]
 
 ''' rect 颜色'''
 rgb_param=[0,0,255]
-
-
 
 
 '''色块识别类'''
@@ -77,7 +76,7 @@ class Color_block_recogn():
         #边缘识别
         canny_img = cv2.Canny(average_val_img,128,255,3)
         # 轮廓提取
-        _,contours, hierarchy = cv2.findContours(canny_img,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+        contours, hierarchy = cv2.findContours(canny_img,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
         try:
             for i in range(len(contours)):
@@ -121,16 +120,14 @@ class Color_block_recogn():
     
     pass
 
+
 ''' 识别 demo '''
 def recogn_main():
     
-    video = Cam_dev(0,640,480)
+    video.open(1,640,480)
     revogn = Color_block_recogn(red_hsv,feature_param,rgb_param)
-
     while True:
-
         img,inRange_hsv = revogn.get_target_img(video.get_img(1))
-        
         # 显示图像
         cv2.imshow('inRange_hsv', inRange_hsv)
         cv2.imshow('src_img', img)

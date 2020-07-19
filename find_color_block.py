@@ -14,13 +14,12 @@ from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QImage, QPixmap
 from Tool_box.Serial_tool import *
 
-
-
 from Ui_find_color_block import Ui_find_color_block
 
 from Color_recognition.Color_block_recogn import Color_block_recogn
 
-from Camera.Cam_dev import Cam_dev
+from Cam_dev import *
+
 
 
 color_dict ={   'red':      [127,197,188,60,197,255],
@@ -74,7 +73,6 @@ place_pos = {   "red":red_place,
                 "blue":blue_place,
                 "yellow":yellow_place
             }
-
 
 class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
@@ -143,7 +141,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.Button_home.clicked.connect(self.change_ARM_tar_pos)
         
         '''初始化摄像头以及识别相关的'''
-        self.video = Cam_dev(0,640,480)
+        # self.video = Cam_dev(0,640,480)
+        # video.open(1,640,480)
         self.revogn = Color_block_recogn(red_hsv,feature_param,rgb_param)
 
         self.timer = QTimer()  
@@ -452,52 +451,56 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         
     '''定时器识别图像'''
     def get_data_result(self):
-        if self.data_status == True:
-            # 放置畸变校正出问题，出问题使用没有畸变校正的图像
-            try:
-                img_src , inrange_img = self.revogn.get_target_img(self.video.get_img(1))
-            except :
-                img_src , inrange_img = self.revogn.get_target_img(self.video.get_img(0))
-                pass
-            img = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB) 
+        # 摄像头打开标志
+        if video.status == True:
+
+            if self.data_status == True:
+                # 放置畸变校正出问题，出问题使用没有畸变校正的图像
+                try:
+                    img_src , inrange_img = self.revogn.get_target_img(video.get_img(1))
+                except :
+                    img_src , inrange_img = self.revogn.get_target_img(video.get_img(0))
+                    pass
+                img = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB) 
+                
+                # 画十字
+                self.draw_pos(img)
+
+                # 显示原图
+                rows, cols, channels=img.shape
+                bytesPerLine = channels * cols
+                QImg = QImage(img.data, cols, rows, bytesPerLine, QImage.Format_RGB888)
+
+                self.label_img.setPixmap(QPixmap.fromImage(QImg).scaled(
+                    self.label_img.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
+
+                # 显示黑白图
+                rows, cols=inrange_img.shape
+                QImg = QImage(inrange_img.data, cols, rows,  QImage.Format_Grayscale8)
+                self.label_img_gray.setPixmap(QPixmap.fromImage(QImg).scaled(
+                    self.label_img_gray.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
+                
+                # 更新识别结果到控件中
+                self.show_recong_result.clear()
             
-            # 画十字
-            self.draw_pos(img)
+                pos = []
+                for i in range(self.revogn.tar_info["num"]):
+                    pos.insert(i,str(np.array(self.revogn.tar_info["center"])[i]))
 
-            # 显示原图
-            rows, cols, channels=img.shape
-            bytesPerLine = channels * cols
-            QImg = QImage(img.data, cols, rows, bytesPerLine, QImage.Format_RGB888)
+                angle = []
+                for i in range(self.revogn.tar_info["num"]):
+                    angle.insert(i,str(np.array(self.revogn.tar_info["angle"])[i]))
 
-            self.label_img.setPixmap(QPixmap.fromImage(QImg).scaled(
-                self.label_img.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
+                temp = "数量:"+str(self.revogn.tar_info["num"])+"\n位置:"+str(pos)+"\n角度:"+str(angle)
 
-            # 显示黑白图
-            rows, cols=inrange_img.shape
-            QImg = QImage(inrange_img.data, cols, rows,  QImage.Format_Grayscale8)
-            self.label_img_gray.setPixmap(QPixmap.fromImage(QImg).scaled(
-                self.label_img_gray.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
-            
-            # 更新识别结果到控件中
-            self.show_recong_result.clear()
+                self.show_recong_result.insertPlainText(str(temp))
         
-            pos = []
-            for i in range(self.revogn.tar_info["num"]):
-                pos.insert(i,str(np.array(self.revogn.tar_info["center"])[i]))
 
-            angle = []
-            for i in range(self.revogn.tar_info["num"]):
-                angle.insert(i,str(np.array(self.revogn.tar_info["angle"])[i]))
+                self.save_obj_info()
 
-            temp = "数量:"+str(self.revogn.tar_info["num"])+"\n位置:"+str(pos)+"\n角度:"+str(angle)
-
-            self.show_recong_result.insertPlainText(str(temp))
-    
-
-            self.save_obj_info()
-
-        cv2.waitKey(1)
+            cv2.waitKey(1)
         pass
+
 
     pass
 
