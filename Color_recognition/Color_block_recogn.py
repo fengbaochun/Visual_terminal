@@ -76,7 +76,7 @@ class Color_block_recogn():
         #边缘识别
         canny_img = cv2.Canny(average_val_img,128,255,3)
         # 轮廓提取
-        contours, hierarchy = cv2.findContours(canny_img,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+        _,contours, hierarchy = cv2.findContours(canny_img,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
         try:
             for i in range(len(contours)):

@@ -328,7 +328,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                 print(obj_all_info)
 
                 Com_dev.send(self.G.home())
-                
+                self.data_status = True
                 print("工作结束")
             else:
                 # Com_dev.send(self.G.init())
@@ -452,6 +452,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     '''定时器识别图像'''
     def get_data_result(self):
         # 摄像头打开标志
+        # print("video.status"+str(video.status))
+        # print("self.data_status"+str(self.data_status))
         if video.status == True:
 
             if self.data_status == True:
