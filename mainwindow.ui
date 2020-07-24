@@ -53,7 +53,7 @@
      </font>
     </property>
     <property name="title">
-     <string>串口</string>
+     <string>Serial</string>
     </property>
     <widget class="QWidget" name="formLayoutWidget">
      <property name="geometry">
@@ -68,19 +68,6 @@
       <item row="0" column="1">
        <widget class="QComboBox" name="Box_com"/>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="font">
-         <font>
-          <family>3ds</family>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>波特率</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="Box_bps"/>
       </item>
@@ -93,7 +80,7 @@
          </font>
         </property>
         <property name="text">
-         <string>数据位</string>
+         <string>Data</string>
         </property>
        </widget>
       </item>
@@ -109,7 +96,7 @@
          </font>
         </property>
         <property name="text">
-         <string>停止位</string>
+         <string>Stop</string>
         </property>
        </widget>
       </item>
@@ -125,7 +112,7 @@
          </font>
         </property>
         <property name="text">
-         <string>校验位</string>
+         <string>Check</string>
         </property>
        </widget>
       </item>
@@ -141,7 +128,20 @@
          </font>
         </property>
         <property name="text">
-         <string>串口号</string>
+         <string>Com</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="font">
+         <font>
+          <family>3ds</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Baud</string>
         </property>
        </widget>
       </item>
@@ -166,7 +166,7 @@
          </font>
         </property>
         <property name="text">
-         <string>打开</string>
+         <string>Open</string>
         </property>
        </widget>
       </item>
@@ -189,7 +189,7 @@
      </font>
     </property>
     <property name="title">
-     <string>摄像头</string>
+     <string>Camera</string>
     </property>
     <widget class="QWidget" name="verticalLayoutWidget_2">
      <property name="geometry">
@@ -212,7 +212,7 @@
            </font>
           </property>
           <property name="text">
-           <string>设备号</string>
+           <string>Dev</string>
           </property>
          </widget>
         </item>
@@ -230,7 +230,7 @@
          </font>
         </property>
         <property name="text">
-         <string>打开</string>
+         <string>Open</string>
         </property>
        </widget>
       </item>
@@ -243,7 +243,7 @@
          </font>
         </property>
         <property name="text">
-         <string>暂停</string>
+         <string>Stop</string>
         </property>
        </widget>
       </item>

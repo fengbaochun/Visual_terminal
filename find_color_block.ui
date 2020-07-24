@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1280</width>
-    <height>866</height>
+    <height>879</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
     </font>
    </property>
    <property name="title">
-    <string>颜色选择</string>
+    <string>Color choose</string>
    </property>
    <widget class="QWidget" name="verticalLayoutWidget_6">
     <property name="geometry">
@@ -99,7 +99,7 @@
     </font>
    </property>
    <property name="title">
-    <string>HSV调整</string>
+    <string>HSV Adjustment</string>
    </property>
    <widget class="QFrame" name="frame">
     <property name="geometry">
@@ -135,7 +135,7 @@
          </font>
         </property>
         <property name="text">
-         <string>S 最大值</string>
+         <string>S Max</string>
         </property>
        </widget>
       </item>
@@ -167,7 +167,7 @@
          </font>
         </property>
         <property name="text">
-         <string>HSV 范围</string>
+         <string>HSV Range</string>
         </property>
        </widget>
       </item>
@@ -208,7 +208,7 @@
          </font>
         </property>
         <property name="text">
-         <string>V 最大值</string>
+         <string>V Max</string>
         </property>
        </widget>
       </item>
@@ -240,7 +240,7 @@
          </font>
         </property>
         <property name="text">
-         <string>S 最小值</string>
+         <string>S Min</string>
         </property>
        </widget>
       </item>
@@ -272,7 +272,7 @@
          </font>
         </property>
         <property name="text">
-         <string>H 最小值</string>
+         <string>H Min</string>
         </property>
        </widget>
       </item>
@@ -304,7 +304,7 @@
          </font>
         </property>
         <property name="text">
-         <string>H 最大值</string>
+         <string>H Max</string>
         </property>
        </widget>
       </item>
@@ -336,7 +336,7 @@
          </font>
         </property>
         <property name="text">
-         <string>V 最小值</string>
+         <string>V Min</string>
         </property>
        </widget>
       </item>
@@ -393,7 +393,7 @@
     </font>
    </property>
    <property name="title">
-    <string>机械臂</string>
+    <string>DexArm</string>
    </property>
    <widget class="QPushButton" name="Button_arm_start">
     <property name="geometry">
@@ -405,7 +405,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>开始工作</string>
+     <string>Start</string>
     </property>
    </widget>
    <widget class="QWidget" name="formLayoutWidget">
@@ -427,7 +427,7 @@
         </font>
        </property>
        <property name="text">
-        <string>红色放置</string>
+        <string>Red place</string>
        </property>
       </widget>
      </item>
@@ -443,7 +443,7 @@
         </font>
        </property>
        <property name="text">
-        <string>蓝色放置</string>
+        <string>Blue place</string>
        </property>
       </widget>
      </item>
@@ -459,7 +459,7 @@
         </font>
        </property>
        <property name="text">
-        <string>黄色放置</string>
+        <string>Yellow place</string>
        </property>
       </widget>
      </item>
@@ -484,7 +484,7 @@
      </font>
     </property>
     <property name="title">
-     <string>调整</string>
+     <string>Adjustment</string>
     </property>
     <widget class="QFrame" name="frame_2">
      <property name="geometry">
@@ -606,7 +606,7 @@
       </font>
      </property>
      <property name="text">
-      <string>单位调整数值</string>
+      <string>step unit</string>
      </property>
     </widget>
     <widget class="QPushButton" name="Button_rest">
@@ -653,7 +653,7 @@
     </font>
    </property>
    <property name="title">
-    <string>识别结果</string>
+    <string>Result</string>
    </property>
    <widget class="QTextBrowser" name="show_recong_result">
     <property name="geometry">

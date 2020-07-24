@@ -314,7 +314,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     def Arm_work(self):
         
         if Com_dev.status == True:
-            if self.Button_arm_start.text() == "开始工作":
+            if self.Button_arm_start.text() == "Start":
                 # self.Button_arm_start.setText("工作中")
                 # 关掉图像处理及收集数据
                 self.data_status = False
@@ -334,7 +334,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                 # Com_dev.send(self.G.init())
                 Com_dev.send(self.G.home())
                 print("结束工作")
-                self.Button_arm_start.setText("开始工作")
+                self.Button_arm_start.setText("Start")
                 # 开启图像处理及收集数据
                 self.data_status = True
         else:
@@ -493,7 +493,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                 for i in range(self.revogn.tar_info["num"]):
                     angle.insert(i,str(np.array(self.revogn.tar_info["angle"])[i]))
 
-                temp = "数量:"+str(self.revogn.tar_info["num"])+"\n位置:"+str(pos)+"\n角度:"+str(angle)
+                # temp = "数量:"+str(self.revogn.tar_info["num"])+"\n位置:"+str(pos)+"\n角度:"+str(angle)
+                temp = "num:"+str(self.revogn.tar_info["num"])+"\npos:"+str(pos)+"\nangle:"+str(angle)
 
                 self.show_recong_result.insertPlainText(str(temp))
         
