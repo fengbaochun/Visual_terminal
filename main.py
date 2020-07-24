@@ -13,7 +13,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         super(MyMainWindow, self).__init__(parent)
         self.setupUi(self)
         #设置软件title
-        self.setWindowTitle("视觉终端")
+        self.setWindowTitle("Vitual terminal")
 
         ''' 设置主界面的内容 '''
         self.com = [] 
@@ -43,17 +43,14 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
         '''打开串口槽函数'''
         self.Button_opencom.clicked.connect(self.on_open_com)
+        self.Button_refresh.clicked.connect(self.refresh_port)
 
         '''打开摄像头槽函数'''
         self.Button_open_cam.clicked.connect(self.on_open_cam)        
-
-        '''定时器刷新串口'''
-        self.timer = QTimer()  
-        self.timer.timeout.connect(self.refresh_port)
-        self.timer.start(500)
+        self.Button_cam_refresh.clicked.connect(self.cam_refresh_port) 
 
         '''在table中添加demo,并在类中实现功能'''
-        table_1 = Find_color_block()
+        table_1 = Find_color_block() 
         self.tabWidget.insertTab(0,table_1,"Color block recognition")
         # 设置当前显示的界面 默认界面
         self.tabWidget.setCurrentWidget(table_1)
@@ -96,15 +93,17 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def on_open_cam(self):
         if self.Button_open_cam.text() == "Open":
-            self.Button_open_cam.setText("Close")
             # 获取界面配置
             cam_x = str(self.Box_cam.currentText()) 
             # 尝试打开 
             try:
                 video.open(int(cam_x),640,480)
                 print("摄像头已打开")
+                self.Button_open_cam.setText("Close")
                 pass
             except:
+                QMessageBox.question(self, "打开错误", "请插入摄像头", QMessageBox.Yes , QMessageBox.Yes)                
+                print("打开失败")
                 pass             
         else:
             video.close()
@@ -113,20 +112,22 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.Button_open_cam.setText("Open")
         pass
 
-    ''' 串口刷新 '''
+    ''' 按键刷新串口设备 '''
     def refresh_port(self):
-
-        # self.com.clear()
-        # self.Box_com.clear()
-        # i = 0
-        # for name in Com_dev.port_list:
-        #     self.com.insert(i,str(name).split("-")[0])
-        #     i = i + 1
-        
-        # self.Box_com.addItems(self.com)
-
+        Com_dev.scan()
+        self.Box_com.clear()
+        for i in range(0,len(Com_dev.port_list)):
+            # print(str(Com_dev.port_list[i]).split("-")[0])
+            self.Box_com.insertItem(i,str(Com_dev.port_list[i]).split("-")[0])
         pass
-        
+
+    ''' 按键刷新摄像头设备 '''
+    def cam_refresh_port(self):
+        video.scan()
+        self.Box_cam.clear()
+        for i in range(0,len(video.dev_list)):
+            self.Box_cam.insertItem(i,str(video.dev_list[i]))
+        pass
 
 
     pass
@@ -146,3 +147,6 @@ if __name__ =='__main__':
 # https://blog.csdn.net/jia666666/article/details/81669092
 # https://blog.csdn.net/Wang_Jiankun/article/details/83269859
 # https://blog.csdn.net/qq_38161040/article/details/89742462
+
+# https://www.cnblogs.com/daicw/p/11989499.html
+# https://www.jianshu.com/p/33bc12c95350

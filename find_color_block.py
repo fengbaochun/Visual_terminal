@@ -246,25 +246,27 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     def get_change_val(self,sender,index):
         
         val = self.spinBox.value()
+        if Com_dev.status == True:
+            QMessageBox.question(self, "打开错误", "请先打开串口再操作!!!", QMessageBox.Yes , QMessageBox.Yes)  
+        else:
+            if sender == "X+":
+                place_pos[index][0] = place_pos[index][0] + val            
+            elif sender == "X-":
+                place_pos[index][0] = place_pos[index][0] - val     
+            elif sender == "Y+":
+                place_pos[index][1] = place_pos[index][1] + val 
+            elif sender == "Y-":
+                place_pos[index][1] = place_pos[index][1] - val  
+            elif sender == "Z+":
+                place_pos[index][2] = place_pos[index][2] + val 
+            elif sender == "Z-":
+                place_pos[index][2] = place_pos[index][2] - val 
+            elif sender == "REST":
+                place_pos["red"] = [280,180,0]
+                place_pos["blue"] = [200,180,0]
+                place_pos["yellow"] = [140,180,0]
 
-        if sender == "X+":
-            place_pos[index][0] = place_pos[index][0] + val            
-        elif sender == "X-":
-            place_pos[index][0] = place_pos[index][0] - val     
-        elif sender == "Y+":
-            place_pos[index][1] = place_pos[index][1] + val 
-        elif sender == "Y-":
-            place_pos[index][1] = place_pos[index][1] - val  
-        elif sender == "Z+":
-            place_pos[index][2] = place_pos[index][2] + val 
-        elif sender == "Z-":
-            place_pos[index][2] = place_pos[index][2] - val 
-        elif sender == "REST":
-            place_pos["red"] = [280,180,0]
-            place_pos["blue"] = [200,180,0]
-            place_pos["yellow"] = [140,180,0]
-
-        print(place_pos[index])
+            print(place_pos[index])
         
         '''同步控件内容'''
         self.show_red_place.clear()
@@ -280,9 +282,12 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         sender = self.sender().text()
         print(sender+ ' 是发送者')
         if sender == "HOME":
-            # 回到home调整 颜色
-            Com_dev.send(self.G.home())
-            Com_dev.read()      
+            try:
+                # 回到home调整 颜色
+                Com_dev.send(self.G.home())
+                Com_dev.read()                    
+            except :
+                QMessageBox.question(self, "打开错误", "请先打开串口再操作!!!", QMessageBox.Yes , QMessageBox.Yes)    
         else:
             # 调整要放的位置
             try:
