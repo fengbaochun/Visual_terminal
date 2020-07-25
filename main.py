@@ -6,6 +6,7 @@ from Ui_mainwindow import Ui_MainWindow
 from find_color_block import Find_color_block  
 from Tool_box.Serial_tool import *
 from Cam_dev import *
+from find_color_block import *
 
 
 class MyMainWindow(QMainWindow, Ui_MainWindow):
@@ -69,8 +70,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             # 尝试打开
             try:
                 status = Com_dev.open()
-                Com_dev.send("M1111\r\n")
-                Com_dev.send("G0X255Y0Z180F4000\r\n")
+                
+                Com_dev.send(gcode.init())
+                Com_dev.send(gcode.home())                
                 
                 if status == False:
                     self.Button_opencom.setText("Open")
@@ -97,7 +99,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             cam_x = str(self.Box_cam.currentText()) 
             # 尝试打开 
             try:
-                video.open(int(cam_x),640,480)
+                # video.open(int(cam_x),640,480)
+                video.open(int(cam_x),800,600)
                 print("摄像头已打开")
                 self.Button_open_cam.setText("Close")
                 pass

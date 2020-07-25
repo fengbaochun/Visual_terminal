@@ -34,7 +34,7 @@ global bule_hsv
 global yellow_hsv
 
 ''' 默认HSV '''
-red_hsv = [108, 190, 59, 255, 121, 255]
+red_hsv = [108, 190, 59, 255, 70, 255]
 blue_hsv = [74, 131, 107, 241, 146, 255]
 yellow_hsv = [30, 83, 125, 209, 143, 255]
 
@@ -62,8 +62,18 @@ obj_all_info = {
 obj_fact_size = 29 # mm
 obj_img_size = 69 # 像素
 
-obj_p = float(obj_img_size)/float(obj_fact_size) 
-print(obj_p)
+# obj_p = float(obj_img_size)/float(obj_fact_size) 
+# print(obj_p)
+obj_p = 2.15
+
+# obj_y = 2.15
+# obj_x = 2.35
+# obj_y = 3.05
+# obj_x = 3.05
+a = 2.65
+obj_y = a
+obj_x = a
+
 
 '''放置位置 [ x , y ,z] 只使用xy,z用来占位，调整的时候使用 '''
 red_place = [280,180,0]
@@ -73,6 +83,12 @@ place_pos = {   "red":red_place,
                 "blue":blue_place,
                 "yellow":yellow_place
             }
+
+''' 机械臂位置 '''
+# 机械臂最高点
+MAX_HIGH=[295,0,175]
+# 地面视角中心点
+VIEW_CENTER=[215,0,-45]
 
 class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
@@ -141,8 +157,6 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.Button_home.clicked.connect(self.change_ARM_tar_pos)
         
         '''初始化摄像头以及识别相关的'''
-        # self.video = Cam_dev(0,640,480)
-        # video.open(1,640,480)
         self.revogn = Color_block_recogn(red_hsv,feature_param,rgb_param)
 
         self.timer = QTimer()  
@@ -188,9 +202,10 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     '''根据图像坐标转换为实际坐标'''
     def get_ARM_pos(self,x,y):
         # 基准坐标为中心坐标
-        y = math.ceil(float((y-320)*1000) / float(obj_p) / float(1000))
-        x = math.ceil(float((x-240)*1000) / float(obj_p) / float(1000))   
+        x = VIEW_CENTER[0] - math.ceil(float((x-300)*1000) / float(obj_x) / float(1000))   
+        y = VIEW_CENTER[1] - math.ceil(float((y-400)*1000) / float(obj_y) / float(1000))
         return [x,y]
+        # return [x,y]
 
     '''搬运逻辑'''
     def move_obj(self):
@@ -201,12 +216,17 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                     y = obj_all_info[dict_name]["center"][i][0]
                     x = obj_all_info[dict_name]["center"][i][1]     
                     temp = self.get_ARM_pos(x,y)
+                    print(temp)
+                    
                     #到达目标位置
-                    Com_dev.send(self.G.XYZ(int(215-temp[0]),int(0-temp[1]),0))
+                    # Com_dev.send(self.G.XYZ(int(225-temp[0]),int(0-temp[1]),0))
+                    Com_dev.send(self.G.XYZ(int(temp[0]),int(temp[1]),0))
                     Com_dev.read()
+                    
                     # 下降
                     Com_dev.send(self.G.Z(-20))
                     Com_dev.read()
+                    
                     # 吸气
                     Com_dev.send(self.G.M100x(0))
                     sleep(0.1)
@@ -227,7 +247,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                     # 上升，避免撞到
                     Com_dev.send(self.G.Z(-5+30*i+40))
                     Com_dev.read()
-                    
+                    '''
+                    '''
                     # #漏气完抬高一下
                     # send_gcode_Z( Gcode_Z + 2 + Z_val*index + 10)        
 
@@ -449,9 +470,11 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     '''对图像画标识，辅助校准'''
     def draw_pos(self,img):
         size = 20
+        img_half_w = 400
+        img_half_h = 300
         # 画十字
-        cv2.line(img,(320-size,240), (320+size,240), (0, 0, 0), 2)
-        cv2.line(img,(320,240-size), (320,240+size), (0, 0, 0), 2)
+        cv2.line(img,(img_half_w-size,img_half_h), (img_half_w+size,img_half_h), (0, 0, 0), 2)
+        cv2.line(img,(img_half_w,img_half_h-size), (img_half_w,img_half_h+size), (0, 0, 0), 2)
         pass
         
     '''定时器识别图像'''
@@ -516,7 +539,6 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 gcode 封装
 '''
 class Gcode(object):
-    datum = [210,0,-10]
     '''初始化'''
     def __init__(self):
         pass
@@ -526,7 +548,7 @@ class Gcode(object):
     
     '''机械臂最高位置'''
     def home(self):
-        return self.XYZ(255,0,180)
+        return self.XYZ(MAX_HIGH[0],MAX_HIGH[1],MAX_HIGH[2])
     
     def Z(self,z):
         temp = "G0"+"Z"+str(z)+"\r\n"
@@ -540,7 +562,7 @@ class Gcode(object):
         pass
 
     def XYZ(self,x,y,z):
-        temp = "G0"+"X"+str(x)+"Y"+str(y)+"Z"+str(z)+"\r\n"
+        temp = "G0"+"X"+str(x)+"Y"+str(y)+"Z"+str(z)+"F5000"+"\r\n"
         return temp
 
     def XY(self,x,y):
@@ -554,6 +576,8 @@ class Gcode(object):
         return "G0F"+str(val)+"\r\n"
 
     pass
+
+gcode = Gcode()
 
 # https://www.cnblogs.com/komean/p/11209780.html
 # https://blog.csdn.net/DerrickRose25/article/details/86744787

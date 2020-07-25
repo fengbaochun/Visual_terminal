@@ -9,6 +9,8 @@ class Cam_dev():
     # 状态
     status = False
     # 畸形矫正参数
+    '''
+    # 640*480
     cameraMatrix = np.array([
                             [ 7.9641507015667764e+02, 0., 3.1577913194699374e+02], 
                             [0.,7.9661307355876215e+02, 2.1453452136833957e+02], 
@@ -22,6 +24,19 @@ class Cam_dev():
                         2.8036176641915598e-03,
                         -2.0575845684235938e+00]
                         ])  
+    '''
+    # 800*600
+    cameraMatrix = np.array([
+                            [ 7.7147312644612566e+02, 0., 4.1076305384540058e+02], 
+                            [0.,7.7196085036305726e+02, 2.7072648925224809e+02], 
+                            [0., 0., 1. ]                            
+                            ])
+
+    distCoeffs = np.array([ -7.5184623537659290e-01, 
+                            9.0484565422186369e-01,
+                            3.5328031670409693e-03, 
+                            -9.5538846153888600e-03,
+                            -9.0276848603826498e-01 ])  
 
     ''' 设置摄像头分辨率参数 '''
     def __init__(self):
@@ -94,14 +109,15 @@ def cam_main():
     # print("Coeffs:\n", str(video.distCoeffs))
 
     dev_id = input("请输入摄像头ID:")
-    video.open(int(dev_id),640,480)
+    # video.open(int(dev_id),640,480)
+    video.open(int(dev_id),800,600)
     # 100张照片后自动释放 关闭
-    num =100
+    num =10000
     while num:
 
         cv2.imshow("dis_img", video.get_img(1))
         cv2.imshow("src_img", video.get_img(0))
-        num =num -1
+        # num =num -1
         cv2.waitKey(1)
         
     video.close()
