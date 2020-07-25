@@ -66,13 +66,11 @@ obj_img_size = 69 # 像素
 # print(obj_p)
 obj_p = 2.15
 
-# obj_y = 2.15
-# obj_x = 2.35
-# obj_y = 3.05
-# obj_x = 3.05
-a = 2.65
-obj_y = a
-obj_x = a
+# a = 2.65
+a = 2.75
+obj_y = 2.75
+
+obj_x = 2.61
 
 
 '''放置位置 [ x , y ,z] 只使用xy,z用来占位，调整的时候使用 '''
@@ -224,7 +222,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                     Com_dev.read()
                     
                     # 下降
-                    Com_dev.send(self.G.Z(-20))
+                    # Com_dev.send(self.G.Z(-20))
+                    Com_dev.send(self.G.Z(-21))
                     Com_dev.read()
                     
                     # 吸气
@@ -235,17 +234,19 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                     Com_dev.send(self.G.Z(20))
                     Com_dev.read()
                     # 到放置位置上方
-                    Com_dev.send(self.G.XYZ(place_pos[dict_name][0],place_pos[dict_name][1],-5+30*i+40))
+                    # Com_dev.send(self.G.XYZ(place_pos[dict_name][0],place_pos[dict_name][1],-5+30*i+40))
+                    Com_dev.send(self.G.XYZ(place_pos[dict_name][0],place_pos[dict_name][1],-5+30*2+40))
                     Com_dev.read()
                     #下降Z
-                    Com_dev.send(self.G.Z(-5+30*i))
+                    Com_dev.send(self.G.Z(-5+30*2))
                     Com_dev.read()
                     #漏气
                     Com_dev.send(self.G.M100x(2))
                     # Com_dev.read()
                     sleep(0.1)
                     # 上升，避免撞到
-                    Com_dev.send(self.G.Z(-5+30*i+40))
+                    # Com_dev.send(self.G.Z(-5+30*i+40))
+                    Com_dev.send(self.G.Z(-5+30*2+40))
                     Com_dev.read()
                     '''
                     '''

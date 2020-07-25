@@ -87,8 +87,8 @@ class Color_block_recogn():
                     min_rect = cv2.minAreaRect(contours[i])
                     # 矩形长宽
                     # if (min_rect[1][0]>self.fea_p[0] and min_rect[1][1]>self.fea_p[1])and(abs(min_rect[1][0]-min_rect[1][1])<self.fea_p[4]):
-                    if (min_rect[1][0]>35 and min_rect[1][1]>35)and(abs(min_rect[1][0]-min_rect[1][1])<25):
-                    # if ((min_rect[1][0] * min_rect[1][1]) > 20):
+                    # if (min_rect[1][0]>35 and min_rect[1][1]>35)and(abs(min_rect[1][0]-min_rect[1][1])<25):
+                    if ((min_rect[1][0] * min_rect[1][1]) > 670):
                         # 矩形坐标
                         box_points = cv2.boxPoints(min_rect)
                         # 标出中心点以及矩形
