@@ -21,7 +21,6 @@ from Color_recognition.Color_block_recogn import Color_block_recogn
 from Cam_dev import *
 
 
-
 color_dict ={   'red':      [127,197,188,60,197,255],
                 'blue':     [50,197,188,80,197,255],
                 'yellow':   [60,197,188,100,197,255],
@@ -102,6 +101,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     flag = True     #防止设置滑块位置时再次进入标志
     data_status = True
     change_pos = [280,0,0]
+    demo_index = 1  #默认demo为木块
     '''初始化'''
     def __init__(self):
         super(Find_color_block, self).__init__()
@@ -160,6 +160,13 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         self.Button_z_less.clicked.connect(self.change_ARM_tar_pos) 
         self.Button_rest.clicked.connect(self.change_ARM_tar_pos)
         self.Button_home.clicked.connect(self.change_ARM_tar_pos)
+
+        ''' 同一类别中进行demo区分 '''
+        '''demo 木块 and 豆子'''
+        self.demo = ["None","Block", "Beans"]
+        self.Boxdemo.addItems(self.demo)
+        self.Boxdemo.setCurrentIndex(0)     
+        self.Boxdemo.currentIndexChanged.connect(self.change_demo)          
         
         '''初始化摄像头以及识别相关的'''
         self.revogn = Color_block_recogn(red_hsv,feature_param,rgb_param)
@@ -172,6 +179,23 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
         print("初始化 ok")
  
+        pass
+
+    
+    '''选择demo 切换相应的参数'''
+    def change_demo(self):
+        current_demo = str(self.Boxdemo.currentText())
+        print(str(self.Boxdemo.currentIndex()))
+        # demo 选择索引
+        self.demo_index = self.Boxdemo.currentIndex()
+        # 木块
+        if current_demo == self.demo[1]:
+            print(str(self.demo[1]))
+            pass
+        # 木块
+        elif current_demo == self.demo[2]:
+            print(str(self.demo[2]))
+            pass        
         pass
 
     
@@ -212,7 +236,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         return [x,y]
         # return [x,y]
 
-    '''搬运逻辑'''
+    '''搬运逻辑 （木块）'''
     def move_obj(self):
 
         for dict_name in obj_all_info:
@@ -221,18 +245,12 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                     y = obj_all_info[dict_name]["center"][i][0]
                     x = obj_all_info[dict_name]["center"][i][1]     
                     temp = self.get_ARM_pos(x,y)
-                    print(temp)
-                    
                     #到达目标位置
-                    # Com_dev.send(self.G.XYZ(int(225-temp[0]),int(0-temp[1]),0))
                     Com_dev.send(self.G.XYZ(int(temp[0]),int(temp[1]),0))
                     Com_dev.read()
-                    
                     # 下降
-                    # Com_dev.send(self.G.Z(-20))
-                    Com_dev.send(self.G.Z(-21))
+                    Com_dev.send(self.G.Z(-20))
                     Com_dev.read()
-                    
                     # 吸气
                     Com_dev.send(self.G.M100x(0))
                     sleep(0.1)
@@ -241,22 +259,19 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                     Com_dev.send(self.G.Z(20))
                     Com_dev.read()
                     # 到放置位置上方
-                    # Com_dev.send(self.G.XYZ(place_pos[dict_name][0],place_pos[dict_name][1],-5+30*i+40))
-                    Com_dev.send(self.G.XYZ(place_pos[dict_name][0],place_pos[dict_name][1],-5+30*2+40))
+                    Com_dev.send(self.G.XYZ(place_pos[dict_name][0],place_pos[dict_name][1],-5+30*i+40))
                     Com_dev.read()
                     #下降Z
-                    Com_dev.send(self.G.Z(-5+30*2))
+                    Com_dev.send(self.G.Z(-5+30*i))
                     Com_dev.read()
                     #漏气
                     Com_dev.send(self.G.M100x(2))
                     # Com_dev.read()
                     sleep(0.1)
                     # 上升，避免撞到
-                    # Com_dev.send(self.G.Z(-5+30*i+40))
-                    Com_dev.send(self.G.Z(-5+30*2+40))
+                    Com_dev.send(self.G.Z(-5+30*i+40))
                     Com_dev.read()
-                    '''
-                    '''
+                    
                     # #漏气完抬高一下
                     # send_gcode_Z( Gcode_Z + 2 + Z_val*index + 10)        
 
@@ -397,21 +412,30 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
         pass
 
+   
+    ''' 选择 demo '''
+    def chose_demo(self,index):
+        # 木块
+        if index == 1:
+            self.move_obj()
+            pass
+        # 豆子
+        elif index == 2:
+            self.move_min_obj()
+            pass
+        pass
+   
     '''机械臂工作'''
     def Arm_work(self):
         
         if Com_dev.status == True:
             if self.Button_arm_start.text() == "Start":
-                # self.Button_arm_start.setText("工作中")
                 # 关掉图像处理及收集数据
                 self.data_status = False
                 print(obj_all_info)
                 
-                # 搬运物块
-                # self.move_obj()
-
-                # 搬运糖豆
-                self.move_min_obj()
+                # 搬运 木块和豆子选择，可拓展其他搬运逻辑
+                self.chose_demo(self.Boxdemo.currentIndex())
                 
                 for i in obj_all_info:
                     obj_all_info[i].clear()
@@ -538,6 +562,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         line_w = 2
         img_half_w = 400
         img_half_h = 300
+
         # 画中心十字
         cv2.line(img,(img_half_w-size,img_half_h), (img_half_w+size,img_half_h), (0, 0, 0), line_w)
         cv2.line(img,(img_half_w,img_half_h-size), (img_half_w,img_half_h+size), (0, 0, 0), line_w)
@@ -573,9 +598,9 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
             if self.data_status == True:
                 # 放置畸变校正出问题，出问题使用没有畸变校正的图像
                 try:
-                    img_src , inrange_img = self.revogn.get_target_img(video.get_img(1))
+                    img_src , inrange_img = self.revogn.get_target_img(video.get_img(1),self.demo_index)
                 except :
-                    img_src , inrange_img = self.revogn.get_target_img(video.get_img(0))
+                    img_src , inrange_img = self.revogn.get_target_img(video.get_img(0),self.demo_index)
                     pass
                 img = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB) 
                 

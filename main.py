@@ -55,6 +55,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.tabWidget.insertTab(0,table_1,"Color block recognition")
         # 设置当前显示的界面 默认界面
         self.tabWidget.setCurrentWidget(table_1)
+
     
     ''' 打开/关闭串口 '''
     def on_open_com(self):
@@ -140,7 +141,7 @@ if __name__ =='__main__':
     app = QApplication(sys.argv)
     myWin = MyMainWindow()
     # 禁止修改窗口大小
-    myWin.setFixedSize(myWin.width(), myWin.height())
+    # myWin.setFixedSize(myWin.width(), myWin.height())
     myWin.show()
     sys.exit(app.exec_())
 

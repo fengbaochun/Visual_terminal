@@ -57,7 +57,7 @@ class Color_block_recogn():
         pass
 
     ''' 按照索引获取识别目标的信息 '''
-    def get_target_img(self,img):
+    def get_target_img(self,img,condition_index):
         
         # 临时缓存
         temp_tar_info = {"num":0,
@@ -85,10 +85,18 @@ class Color_block_recogn():
                 if (len(contours[i])>35):
                     # 最小外接矩形
                     min_rect = cv2.minAreaRect(contours[i])
+
+                    # 条件选择
+                    if condition_index == 1:
+                        # 识别条件
+                        result = (min_rect[1][0]>35 and min_rect[1][1]>35)and(abs(min_rect[1][0]-min_rect[1][1])<25)
+                    elif condition_index == 2:
+                        result = (min_rect[1][0] * min_rect[1][1]) > 670
+
                     # 矩形长宽
-                    # if (min_rect[1][0]>self.fea_p[0] and min_rect[1][1]>self.fea_p[1])and(abs(min_rect[1][0]-min_rect[1][1])<self.fea_p[4]):
                     # if (min_rect[1][0]>35 and min_rect[1][1]>35)and(abs(min_rect[1][0]-min_rect[1][1])<25):
-                    if ((min_rect[1][0] * min_rect[1][1]) > 670):
+                    # if ((min_rect[1][0] * min_rect[1][1]) > 670):
+                    if result:
                         # 矩形坐标
                         box_points = cv2.boxPoints(min_rect)
                         # 标出中心点以及矩形
