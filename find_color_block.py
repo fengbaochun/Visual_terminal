@@ -534,12 +534,33 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
     '''对图像画标识，辅助校准'''
     def draw_pos(self,img):
-        size = 20
+        size = 15
+        line_w = 2
         img_half_w = 400
         img_half_h = 300
-        # 画十字
-        cv2.line(img,(img_half_w-size,img_half_h), (img_half_w+size,img_half_h), (0, 0, 0), 2)
-        cv2.line(img,(img_half_w,img_half_h-size), (img_half_w,img_half_h+size), (0, 0, 0), 2)
+        # 画中心十字
+        cv2.line(img,(img_half_w-size,img_half_h), (img_half_w+size,img_half_h), (0, 0, 0), line_w)
+        cv2.line(img,(img_half_w,img_half_h-size), (img_half_w,img_half_h+size), (0, 0, 0), line_w)
+
+        # 画中心偏移的十字
+        
+        diff=[220,220]
+        cv2.line(img,(img_half_w-size-diff[0],img_half_h), (img_half_w+size-diff[0],img_half_h), (0, 0, 0), line_w)
+        cv2.line(img,(img_half_w-diff[1],img_half_h-size), (img_half_w-diff[1],img_half_h+size), (0, 0, 0), line_w)    
+
+        diff=[-220,-220]
+        cv2.line(img,(img_half_w-size-diff[0],img_half_h), (img_half_w+size-diff[0],img_half_h), (0, 0, 0), line_w)
+        cv2.line(img,(img_half_w-diff[1],img_half_h-size), (img_half_w-diff[1],img_half_h+size), (0, 0, 0), line_w)    
+
+        diff=[220,220]
+        cv2.line(img,(img_half_w-size,img_half_h-diff[0]), (img_half_w+size,img_half_h-diff[0]), (0, 0, 0), line_w)
+        cv2.line(img,(img_half_w,img_half_h-size-diff[1]), (img_half_w,img_half_h+size-diff[1]), (0, 0, 0), line_w)    
+
+        diff=[-220,-220]
+        cv2.line(img,(img_half_w-size,img_half_h-diff[0]), (img_half_w+size,img_half_h-diff[0]), (0, 0, 0), line_w)
+        cv2.line(img,(img_half_w,img_half_h-size-diff[1]), (img_half_w,img_half_h+size-diff[1]), (0, 0, 0), line_w)    
+   
+
         pass
         
     '''定时器识别图像'''
