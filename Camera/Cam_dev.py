@@ -103,7 +103,7 @@ def cam_main():
 
         cv2.imshow("dis_img", video.get_img(1))
         cv2.imshow("src_img", video.get_img(0))
-        num =num -1
+        # num =num -1
         cv2.waitKey(1)
         
     video.close()

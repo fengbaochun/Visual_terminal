@@ -66,11 +66,18 @@ obj_img_size = 69 # 像素
 # print(obj_p)
 obj_p = 2.15
 
-# a = 2.65
-a = 2.75
-obj_y = 2.75
+# # Z = -21
+# # 图像偏置 特别准
+# obj_y = 2.75
+# obj_x = 2.61
 
-obj_x = 2.61
+# Z = -21
+# 图像偏置
+# obj_y = 2.65
+# obj_x = 2.48
+
+obj_y = 2.55
+obj_x = 2.48
 
 
 '''放置位置 [ x , y ,z] 只使用xy,z用来占位，调整的时候使用 '''
@@ -258,6 +265,59 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                 pass
         pass
 
+    '''移动小物体'''
+    def move_min_obj(self):
+        for dict_name in obj_all_info:
+            try:
+                for i in range(len(obj_all_info[dict_name]["center"])):
+                    y = obj_all_info[dict_name]["center"][i][0]
+                    x = obj_all_info[dict_name]["center"][i][1]     
+                    temp = self.get_ARM_pos(x,y)
+                    print(temp)
+                    
+                    #到达目标位置
+                    # Com_dev.send(self.G.XYZ(int(225-temp[0]),int(0-temp[1]),0))
+                    Com_dev.send(self.G.XYZ(int(temp[0]),int(temp[1]),0))
+                    Com_dev.read()
+                    
+                    # 下降
+                    # Com_dev.send(self.G.Z(-21))
+                    Com_dev.send(self.G.Z(-45))
+                    Com_dev.read()
+                    
+                    # 吸气
+                    Com_dev.send(self.G.M100x(0))
+                    sleep(0.1)
+                    # Com_dev.read()
+                    # 上升 一定高度
+                    Com_dev.send(self.G.Z(20))
+                    Com_dev.read()
+                    # 到放置位置上方
+                    # Com_dev.send(self.G.XYZ(place_pos[dict_name][0],place_pos[dict_name][1],-5+30*i+40))
+                    Com_dev.send(self.G.XYZ(place_pos[dict_name][0],place_pos[dict_name][1],-5+30*2+40))
+                    Com_dev.read()
+                    #下降Z
+                    Com_dev.send(self.G.Z(-5+30*2))
+                    Com_dev.read()
+                    #漏气
+                    Com_dev.send(self.G.M100x(2))
+                    # Com_dev.read()
+                    sleep(0.1)
+                    # 上升，避免撞到
+                    # Com_dev.send(self.G.Z(-5+30*i+40))
+                    Com_dev.send(self.G.Z(-5+30*2+40))
+                    Com_dev.read()
+                    '''
+                    '''
+                    # #漏气完抬高一下
+                    # send_gcode_Z( Gcode_Z + 2 + Z_val*index + 10)        
+
+            except:
+                print(dict_name+"没有选择")
+                pass
+        pass
+
+
     '''获取机械臂当前位置，下位机暂时没有支持'''
     def get_current_ARM_pos(self):
         "G0X280Y0Z0"
@@ -347,7 +407,11 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                 self.data_status = False
                 print(obj_all_info)
                 
-                self.move_obj()
+                # 搬运物块
+                # self.move_obj()
+
+                # 搬运糖豆
+                self.move_min_obj()
                 
                 for i in obj_all_info:
                     obj_all_info[i].clear()
