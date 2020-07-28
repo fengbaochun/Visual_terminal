@@ -75,8 +75,14 @@ obj_p = 2.15
 # obj_y = 2.65
 # obj_x = 2.48
 
+# obj_y = 2.55
+# obj_x = 2.48
+
+global obj_y
+global obj_x
+
 obj_y = 2.55
-obj_x = 2.48
+obj_x = 2.55
 
 
 '''放置位置 [ x , y ,z] 只使用xy,z用来占位，调整的时候使用 '''
@@ -177,8 +183,37 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         
         self.G = Gcode()
 
+        '''调整缩放倍率'''
+        self.Box_x.setRange(200,1000)
+        self.Box_y.setRange(200,1000)
+
+        self.Box_x.setValue(int(obj_x*100))
+        self.Box_y.setValue(int(obj_y*100))
+
+        self.Button_xy_ok.clicked.connect(self.set_xy_multiple)
+
         print("初始化 ok")
  
+        pass
+
+    '''设置摄像头与实际的缩放倍数'''
+    def set_xy_multiple(self):
+
+
+        global obj_y
+        global obj_x
+
+        '''当前控件的文本'''
+        print("控件X:"+self.Box_x.text())
+        print("控件Y:"+self.Box_y.text())
+
+        '''设置全局变量'''
+        obj_x = float(self.Box_x.text())/float(100)
+        obj_y = float(self.Box_y.text())/float(100)
+
+        print("obj_x:"+str(float(obj_x)))
+        print("obj_y:"+str(float(obj_y)))        
+
         pass
 
     
@@ -233,6 +268,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         # 基准坐标为中心坐标
         x = VIEW_CENTER[0] - math.ceil(float((x-300)*1000) / float(obj_x) / float(1000))   
         y = VIEW_CENTER[1] - math.ceil(float((y-400)*1000) / float(obj_y) / float(1000))
+        print("obj_x"+str(obj_x))
+        print("obj_y"+str(obj_y))
         return [x,y]
         # return [x,y]
 

@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication,QMainWindow,QMessageBox
 from PyQt5.QtCore import QTimer
+from PyQt5.QtGui import QIcon
 #调用文件
 from Ui_mainwindow import Ui_MainWindow  
 from find_color_block import Find_color_block  
