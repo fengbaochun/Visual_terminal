@@ -142,7 +142,7 @@ if __name__ =='__main__':
     app = QApplication(sys.argv)
     myWin = MyMainWindow()
     # 禁止修改窗口大小
-    # myWin.setFixedSize(myWin.width(), myWin.height())
+    myWin.setFixedSize(myWin.width(), myWin.height())
     myWin.show()
     sys.exit(app.exec_())
 
@@ -155,3 +155,5 @@ if __name__ =='__main__':
 
 # https://www.cnblogs.com/daicw/p/11989499.html
 # https://www.jianshu.com/p/33bc12c95350
+
+# https://blog.csdn.net/qq_25939803/article/details/100066444?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param

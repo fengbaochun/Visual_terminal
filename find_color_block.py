@@ -81,6 +81,11 @@ obj_p = 2.15
 global obj_y
 global obj_x
 
+# 豆子
+# obj_y = 2.55
+# obj_x = 2.55
+
+# 木块
 obj_y = 2.55
 obj_x = 2.55
 
@@ -88,7 +93,7 @@ obj_x = 2.55
 '''放置位置 [ x , y ,z] 只使用xy,z用来占位，调整的时候使用 '''
 red_place = [280,180,0]
 blue_place = [200,180,0]
-yellow_place = [140,180,0]
+yellow_place = [120,180,0]
 place_pos = {   "red":red_place,
                 "blue":blue_place,
                 "yellow":yellow_place
@@ -296,17 +301,17 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                     Com_dev.send(self.G.Z(20))
                     Com_dev.read()
                     # 到放置位置上方
-                    Com_dev.send(self.G.XYZ(place_pos[dict_name][0],place_pos[dict_name][1],-5+30*i+40))
+                    Com_dev.send(self.G.XYZ(place_pos[dict_name][0],place_pos[dict_name][1],-5+30*i+35))
                     Com_dev.read()
                     #下降Z
-                    Com_dev.send(self.G.Z(-5+30*i))
+                    Com_dev.send(self.G.Z(-12+30*i))
                     Com_dev.read()
                     #漏气
                     Com_dev.send(self.G.M100x(2))
                     # Com_dev.read()
                     sleep(0.1)
                     # 上升，避免撞到
-                    Com_dev.send(self.G.Z(-5+30*i+40))
+                    Com_dev.send(self.G.Z(-5+30*i+35))
                     Com_dev.read()
                     
                     # #漏气完抬高一下
@@ -398,7 +403,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
             elif sender == "REST":
                 place_pos["red"] = [280,180,0]
                 place_pos["blue"] = [200,180,0]
-                place_pos["yellow"] = [140,180,0]
+                place_pos["yellow"] = [120,180,0]
 
             print(place_pos[index])
         
@@ -441,7 +446,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                 '''没有打开串口需要提示'''
                 place_pos["red"] = [280,180,0]
                 place_pos["blue"] = [200,180,0]
-                place_pos["yellow"] = [140,180,0]
+                place_pos["yellow"] = [120,180,0]
                 QMessageBox.question(self, "打开错误", "请先打开串口再操作!!!", QMessageBox.Yes , QMessageBox.Yes)              
                 print("打开失败")
                 pass   
