@@ -63,37 +63,25 @@ obj_img_size = 69 # 像素
 
 # obj_p = float(obj_img_size)/float(obj_fact_size) 
 # print(obj_p)
-obj_p = 2.15
-
-# # Z = -21
-# # 图像偏置 特别准
-# obj_y = 2.75
-# obj_x = 2.61
-
 # Z = -21
 # 图像偏置
-# obj_y = 2.65
-# obj_x = 2.48
-
-# obj_y = 2.55
-# obj_x = 2.48
 
 global obj_y
 global obj_x
 
 # 豆子
-# obj_y = 2.55
-# obj_x = 2.55
+obj_y = 2.50
+obj_x = 2.55
 
 # 木块
-obj_y = 2.55
-obj_x = 2.55
+# obj_y = 2.60
+# obj_x = 2.75
 
 
 '''放置位置 [ x , y ,z] 只使用xy,z用来占位，调整的时候使用 '''
-red_place = [280,180,0]
-blue_place = [200,180,0]
-yellow_place = [120,180,0]
+red_place = [-180,280,0]
+blue_place = [-180,200,0]
+yellow_place = [-180,120,0]
 place_pos = {   "red":red_place,
                 "blue":blue_place,
                 "yellow":yellow_place
@@ -101,9 +89,9 @@ place_pos = {   "red":red_place,
 
 ''' 机械臂位置 '''
 # 机械臂最高点
-MAX_HIGH=[295,0,175]
+MAX_HIGH=[0,295,167]
 # 地面视角中心点
-VIEW_CENTER=[215,0,-45]
+VIEW_CENTER=[0,215,-45]
 
 class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
 
@@ -111,7 +99,6 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     num=0
     flag = True     #防止设置滑块位置时再次进入标志
     data_status = True
-    change_pos = [280,0,0]
     demo_index = 1  #默认demo为木块
     '''初始化'''
     def __init__(self):
@@ -271,12 +258,11 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     '''根据图像坐标转换为实际坐标'''
     def get_ARM_pos(self,x,y):
         # 基准坐标为中心坐标
-        x = VIEW_CENTER[0] - math.ceil(float((x-300)*1000) / float(obj_x) / float(1000))   
-        y = VIEW_CENTER[1] - math.ceil(float((y-400)*1000) / float(obj_y) / float(1000))
+        x = VIEW_CENTER[0] + math.ceil(float((x-400)*1000) / float(obj_x) / float(1000))   
+        y = VIEW_CENTER[1] - math.ceil(float((y-300)*1000) / float(obj_y) / float(1000))
         print("obj_x"+str(obj_x))
         print("obj_y"+str(obj_y))
         return [x,y]
-        # return [x,y]
 
     '''搬运逻辑 （木块）'''
     def move_obj(self):
@@ -284,12 +270,16 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         for dict_name in obj_all_info:
             try:
                 for i in range(len(obj_all_info[dict_name]["center"])):
-                    y = obj_all_info[dict_name]["center"][i][0]
-                    x = obj_all_info[dict_name]["center"][i][1]     
+                    x = obj_all_info[dict_name]["center"][i][0]
+                    y = obj_all_info[dict_name]["center"][i][1]     
                     temp = self.get_ARM_pos(x,y)
+                    print("图中"+str([x,y]))
+                    print("ARM"+str(temp))
+                    
                     #到达目标位置
                     Com_dev.send(self.G.XYZ(int(temp[0]),int(temp[1]),0))
                     Com_dev.read()
+                    
                     # 下降
                     Com_dev.send(self.G.Z(-20))
                     Com_dev.read()
@@ -313,9 +303,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                     # 上升，避免撞到
                     Com_dev.send(self.G.Z(-5+30*i+35))
                     Com_dev.read()
-                    
-                    # #漏气完抬高一下
-                    # send_gcode_Z( Gcode_Z + 2 + Z_val*index + 10)        
+                    '''
+                    '''
 
             except:
                 print(dict_name+"没有选择")
@@ -327,8 +316,8 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         for dict_name in obj_all_info:
             try:
                 for i in range(len(obj_all_info[dict_name]["center"])):
-                    y = obj_all_info[dict_name]["center"][i][0]
-                    x = obj_all_info[dict_name]["center"][i][1]     
+                    x = obj_all_info[dict_name]["center"][i][0]
+                    y = obj_all_info[dict_name]["center"][i][1]     
                     temp = self.get_ARM_pos(x,y)
                     print(temp)
                     
@@ -339,8 +328,13 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                     
                     # 下降
                     # Com_dev.send(self.G.Z(-21))
-                    Com_dev.send(self.G.Z(-45))
+                    Com_dev.send(self.G.Z(-40))
                     Com_dev.read()
+                    
+                    #临时测试用 
+                    # Com_dev.send(self.G.Z(20))
+                    # Com_dev.read()
+                    # sleep(1)
                     
                     # 吸气
                     Com_dev.send(self.G.M100x(0))
@@ -378,7 +372,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     '''获取机械臂当前位置，下位机暂时没有支持'''
     def get_current_ARM_pos(self):
         "G0X280Y0Z0"
-        return [280,0,0]
+        return [0,300,0]
         pass
     
     '''获取调整后的数值'''
@@ -401,9 +395,9 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
             elif sender == "Z-":
                 place_pos[index][2] = place_pos[index][2] - val 
             elif sender == "REST":
-                place_pos["red"] = [280,180,0]
-                place_pos["blue"] = [200,180,0]
-                place_pos["yellow"] = [120,180,0]
+                place_pos["red"] = [-180,280,0]
+                place_pos["blue"] = [-180,200,0]
+                place_pos["yellow"] = [-180,120,0]
 
             print(place_pos[index])
         
@@ -444,9 +438,9 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                     Com_dev.read()      
             except:              
                 '''没有打开串口需要提示'''
-                place_pos["red"] = [280,180,0]
-                place_pos["blue"] = [200,180,0]
-                place_pos["yellow"] = [120,180,0]
+                place_pos["red"] = [-180,280,0]
+                place_pos["blue"] = [-180,200,0]
+                place_pos["yellow"] = [-180,120,0]
                 QMessageBox.question(self, "打开错误", "请先打开串口再操作!!!", QMessageBox.Yes , QMessageBox.Yes)              
                 print("打开失败")
                 pass   
