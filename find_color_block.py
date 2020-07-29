@@ -69,6 +69,18 @@ obj_img_size = 69 # 像素
 global obj_y
 global obj_x
 
+global obj_y_d
+global obj_x_d
+
+global obj_y_m
+global obj_x_m
+
+obj_y_d = 2.50
+obj_x_d = 2.55
+
+obj_y_m = 2.60
+obj_x_m = 2.75
+
 # 豆子
 obj_y = 2.50
 obj_x = 2.55
@@ -76,6 +88,8 @@ obj_x = 2.55
 # 木块
 # obj_y = 2.60
 # obj_x = 2.75
+
+
 
 
 '''放置位置 [ x , y ,z] 只使用xy,z用来占位，调整的时候使用 '''
@@ -191,9 +205,14 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     '''设置摄像头与实际的缩放倍数'''
     def set_xy_multiple(self):
 
-
         global obj_y
         global obj_x
+
+        global obj_y_d
+        global obj_x_d
+
+        global obj_y_m
+        global obj_x_m        
 
         '''当前控件的文本'''
         print("控件X:"+self.Box_x.text())
@@ -204,7 +223,46 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         obj_y = float(self.Box_y.text())/float(100)
 
         print("obj_x:"+str(float(obj_x)))
-        print("obj_y:"+str(float(obj_y)))        
+        print("obj_y:"+str(float(obj_y)))    
+
+        current_demo = str(self.Boxdemo.currentText())
+        print(str(self.Boxdemo.currentIndex()))
+        # demo 选择索引
+        self.demo_index = self.Boxdemo.currentIndex()
+        # 木块
+        if current_demo == self.demo[1]:
+            '''当前控件的文本'''
+            print("控件X:"+self.Box_x.text())
+            print("控件Y:"+self.Box_y.text())
+
+            '''设置全局变量'''
+            obj_x = float(self.Box_x.text())/float(100)
+            obj_y = float(self.Box_y.text())/float(100)
+
+            obj_y_m = obj_y
+            obj_x_m = obj_x
+
+            print("obj_x:"+str(float(obj_x)))
+            print("obj_y:"+str(float(obj_y)))   
+
+            pass
+        # 豆子
+        elif current_demo == self.demo[2]:
+            '''当前控件的文本'''
+            print("控件X:"+self.Box_x.text())
+            print("控件Y:"+self.Box_y.text())
+
+            '''设置全局变量'''
+            obj_x = float(self.Box_x.text())/float(100)
+            obj_y = float(self.Box_y.text())/float(100)
+
+            obj_y_d = obj_y
+            obj_x_d = obj_x
+
+            print("obj_x:"+str(float(obj_x)))
+            print("obj_y:"+str(float(obj_y)))   
+            pass        
+        pass   
 
         pass
 
@@ -218,10 +276,14 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         # 木块
         if current_demo == self.demo[1]:
             print(str(self.demo[1]))
+            self.Box_x.setValue(int(obj_x_m*100))
+            self.Box_y.setValue(int(obj_y_m*100))
             pass
-        # 木块
+        # 豆子
         elif current_demo == self.demo[2]:
             print(str(self.demo[2]))
+            self.Box_x.setValue(int(obj_x_d*100))
+            self.Box_y.setValue(int(obj_y_d*100))
             pass        
         pass
 
