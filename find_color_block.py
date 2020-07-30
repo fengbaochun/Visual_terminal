@@ -441,7 +441,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
     def get_change_val(self,sender,index):
         
         val = self.spinBox.value()
-        if Com_dev.status == True:
+        if Com_dev.status == False:
             QMessageBox.question(self, "打开错误", "请先打开串口再操作!!!", QMessageBox.Yes , QMessageBox.Yes)  
         else:
             if sender == "X+":
