@@ -28,9 +28,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.Box_bps.addItems(bps)
         self.Box_bps.setCurrentIndex(1)
 
-        check = ["None", "奇校检", "偶校检", "1校检", "0校检"]
-        self.Box_check.addItems(check)
-        self.Box_check.setCurrentIndex(0)
+        # check = ["None", "奇校检", "偶校检", "1校检", "0校检"]
+        # self.Box_check.addItems(check)
+        # self.Box_check.setCurrentIndex(0)
 
         stop_bit = ["1","1.5","2"]
         self.Box_stop.addItems(stop_bit)
@@ -78,7 +78,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 
                 if status == False:
                     self.Button_opencom.setText("Open")
-                    QMessageBox.question(self, "打开错误", "串口已被占用或不存在!!!", QMessageBox.Yes , QMessageBox.Yes)                                    
+                    QMessageBox.question(self, "Open error", "The serial port is occupied or does not exist!!!", QMessageBox.Yes , QMessageBox.Yes)                                    
                     print("打开失败")
                     return 
                 
@@ -86,7 +86,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 pass
             except:
                 self.Button_opencom.setText("Open")
-                QMessageBox.question(self, "打开错误", "串口已被占用或不存在!!!", QMessageBox.Yes , QMessageBox.Yes)                
+                QMessageBox.question(self, "Open error", "The serial port is occupied or does not exist!!!", QMessageBox.Yes , QMessageBox.Yes)                
                 print("打开失败")
                 return 
         else:
@@ -107,7 +107,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 self.Button_open_cam.setText("Close")
                 pass
             except:
-                QMessageBox.question(self, "打开错误", "请插入摄像头", QMessageBox.Yes , QMessageBox.Yes)                
+                QMessageBox.question(self, "Open error", "Please insert the camera", QMessageBox.Yes , QMessageBox.Yes)                
                 print("打开失败")
                 pass             
         else:

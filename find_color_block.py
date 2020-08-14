@@ -442,7 +442,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
         
         val = self.spinBox.value()
         if Com_dev.status == False:
-            QMessageBox.question(self, "打开错误", "请先打开串口再操作!!!", QMessageBox.Yes , QMessageBox.Yes)  
+            QMessageBox.question(self, "Open error", "Please open the serial port before operation!!!", QMessageBox.Yes , QMessageBox.Yes)  
         else:
             if sender == "X+":
                 place_pos[index][0] = place_pos[index][0] + val            
@@ -482,7 +482,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                 Com_dev.send(self.G.home())
                 Com_dev.read()                    
             except :
-                QMessageBox.question(self, "打开错误", "请先打开串口再操作!!!", QMessageBox.Yes , QMessageBox.Yes)    
+                QMessageBox.question(self, "Open error", "Please open the serial port before operation!!!", QMessageBox.Yes , QMessageBox.Yes)    
         else:
             # 调整要放的位置
             try:
@@ -503,7 +503,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                 place_pos["red"] = [-180,280,0]
                 place_pos["blue"] = [-180,200,0]
                 place_pos["yellow"] = [-180,120,0]
-                QMessageBox.question(self, "打开错误", "请先打开串口再操作!!!", QMessageBox.Yes , QMessageBox.Yes)              
+                QMessageBox.question(self, "Open error", "Please open the serial port before operation!!!", QMessageBox.Yes , QMessageBox.Yes)              
                 print("打开失败")
                 pass   
             print(place_pos)
@@ -551,7 +551,7 @@ class Find_color_block(QtWidgets.QWidget, Ui_find_color_block):
                 # 开启图像处理及收集数据
                 self.data_status = True
         else:
-            QMessageBox.question(self, '警告', '请先打开串口再操作', QMessageBox.Yes, QMessageBox.Yes)        
+            QMessageBox.question(self, 'warning', 'Please open the serial port before operation', QMessageBox.Yes, QMessageBox.Yes)        
         pass
 
     '''滑块'''

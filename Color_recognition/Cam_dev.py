@@ -94,13 +94,20 @@ def cam_main():
     num =100
     while num:
 
-        cv2.imshow("dis_img", video.get_img(1))
-        cv2.imshow("src_img", video.get_img(0))
-        num =num -1
+        # cv2.imshow("dis_img", video.get_img(1))
+        horizontal = cv2.flip(video.get_img(0),0,dst=None) 
+        cv2.imshow("src_img", horizontal)
+        # num =num -1
         cv2.waitKey(1)
         
     video.close()
     pass
+
+'''
+horizontal = cv.flip(img,1,dst=None) #水平镜像
+vertical = cv.flip(img,0,dst=None) #垂直镜像
+cross = cv.flip(img,-1,dst=None) #对角镜像
+'''
 
 '''主函数'''
 if __name__ == "__main__":
