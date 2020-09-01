@@ -34,7 +34,6 @@ global red_hsv
 global bule_hsv
 global yellow_hsv
 
-# Json_g
 
 # red_hsv = [108, 190, 59, 255, 70, 255]
 # blue_hsv = [74, 131, 107, 241, 146, 255]
@@ -96,10 +95,13 @@ obj_x = 2.55
 # blue_place = [-180,200,0]
 # yellow_place = [-180,120,0]
 
-place_pos = {   "red":Json_g.read_level2("place_pos","red"),
-                "blue":Json_g.read_level2("place_pos","blue"),
-                "yellow":Json_g.read_level2("place_pos","yellow")
-            }
+# place_pos = {   "red":Json_g.read_level2("place_pos","red"),
+#                 "blue":Json_g.read_level2("place_pos","blue"),
+#                 "yellow":Json_g.read_level2("place_pos","yellow")
+#             }
+
+place_pos = Json_g.read_level1("place_pos")
+print(place_pos)
 
 MAX_HIGH=[0,295,167]
 

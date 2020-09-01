@@ -46,7 +46,8 @@ class Json_c():
     def update_data1(self,key,value):
         self.json_data[key] = value
         # json 转 字符串
-        json_str = json.dumps(self.json_data, ensure_ascii=False, indent=4)
+        # json_str = json.dumps(self.json_data, ensure_ascii=False, indent=4)
+        json_str = json.dumps(self.json_data,indent=1)
         # 写入字符串到json
         with open(self.path, 'w') as json_file:
 	        json_file.write(json_str)
@@ -57,7 +58,7 @@ class Json_c():
     def update_data2(self,key1,key2,value):
         self.json_data[key1][key2] = value
         # json 转 字符串
-        json_str = json.dumps(self.json_data, ensure_ascii=False, indent=4)
+        json_str = json.dumps(self.json_data,indent=1)
         # 写入字符串到json
         with open(self.path, 'w') as json_file:
 	        json_file.write(json_str)
