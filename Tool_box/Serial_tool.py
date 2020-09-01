@@ -66,7 +66,6 @@ class Serial_dev(object):
                     pass
         pass
 
-
     def read(self):
         # status = False
         # while status:
