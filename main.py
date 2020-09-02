@@ -8,6 +8,7 @@ from find_color_block import Find_color_block
 from Tool_box.Serial_tool import *
 from Cam_dev import *
 from find_color_block import *
+from PyQt5 import sip
 
 
 
@@ -16,7 +17,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         super(MyMainWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.setWindowTitle("Vitual terminal")
+        self.setWindowTitle("Rotrics Vision Terminal")
 
         self.com = [] 
         for name in Com_dev.port_list:
@@ -129,6 +130,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 if __name__ =='__main__':
     app = QApplication(sys.argv)
     myWin = MyMainWindow()
-    myWin.setFixedSize(myWin.width(), myWin.height())
+    myWin.setWindowIcon(QIcon('./img/logo.ico'))
+    myWin.setFixedSize(myWin.width(), myWin.height())    
     myWin.show()
     sys.exit(app.exec_())

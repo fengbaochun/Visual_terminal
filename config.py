@@ -1,17 +1,59 @@
+
+import sys
 import json
 import os
 
+
+defult_dist = { 
+    "red_hsv": [  108,  190,  59,  255,  70,  255 ],
+    "blue_hsv": [  74,  130,  114,  241,  136,  255 ],
+    "yellow_hsv": [  30,  83,  81,  209,  143,  255 ],
+    "obj_y_d": 2.5,
+    "obj_x_d": 2.55,
+    "obj_y_m": 2.6,
+    "obj_x_m": 2.75,
+    "place_pos": {
+        "red": [   -180,   280,   0  ],
+        "blue": [   -180,   200,   0  ],
+        "yellow": [   -180,   120,   0  ]
+    }
+}
+
 '''json 操作类'''
 class Json_c():
+
     '''类初始化'''
     def __init__(self,temp_path):
         self.path = temp_path
+        self.create_file()
+        print(defult_dist)
+
         try:
             self.read_all()
         except :
             print("json : "+str(self.path)+"文件不存在")
             pass
         pass
+
+    '''创建文件'''
+    def create_file(self):
+        path = self.path[0:self.path.rfind("/")]
+        # if not os.path.isdir(path):  # 无文件夹时创建
+        #     os.makedirs(path)
+        if not os.path.isfile(self.path):  # 无文件时创建
+            fd = open(self.path, mode="w", encoding="utf-8")
+            fd.close()
+
+            # 写入文件
+            # json 转 字符串
+            json_str = json.dumps(defult_dist,indent=1)
+            # 写入字符串到json
+            with open(self.path, 'w') as json_file:
+                json_file.write(json_str)
+
+        else:
+            print(str(self.path)+" existed")
+            pass    
     
     '''读'''
     def read_all(self):
@@ -74,22 +116,23 @@ class Json_c():
     pass
 
 global Json_g
-Json_g = Json_c('config.json')
+Json_g = Json_c('C:config.json')
 
-'''主函数'''
-def main():
-    test = Json_c('config.json')
-    test.read_level1("place_pos")
-    test.read_level2("place_pos","red")
-    test.print_json()
-    test.update_data1("red_hsv",[108, 190, 59, 255, 70, 255])
-    test.print_json()
-    # test.add("name","789456123456789456")
-    # test.print_json()
+# '''主函数'''
+# def main():
+#     test = Json_c('C:config.json')
+#     test.read_level1("place_pos")
+#     test.read_level2("place_pos","red")
+#     test.print_json()
+#     test.update_data1("red_hsv",[108, 190, 59, 255, 70, 255])
+#     test.print_json()
+#     # test.add("name","789456123456789456")
+#     # test.print_json()
 
-    pass
+#     pass
 
-if __name__ == "__main__":
-    main()
-    pass
+# if __name__ == "__main__":
+#     main()
+#     pass
+
 
