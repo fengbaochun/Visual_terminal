@@ -19,10 +19,10 @@ defult_dist = {
     }
 }
 
-'''json 操作类'''
+'''json '''
 class Json_c():
 
-    '''类初始化'''
+    '''init'''
     def __init__(self,temp_path):
         self.path = temp_path
         self.create_file()
@@ -31,23 +31,21 @@ class Json_c():
         try:
             self.read_all()
         except :
-            print("json : "+str(self.path)+"文件不存在")
+            print("json : "+str(self.path)+" no existed")
             pass
         pass
 
-    '''创建文件'''
+    '''creat file'''
     def create_file(self):
         path = self.path[0:self.path.rfind("/")]
-        # if not os.path.isdir(path):  # 无文件夹时创建
+        # if not os.path.isdir(path): 
         #     os.makedirs(path)
-        if not os.path.isfile(self.path):  # 无文件时创建
+        if not os.path.isfile(self.path): 
             fd = open(self.path, mode="w", encoding="utf-8")
             fd.close()
 
-            # 写入文件
-            # json 转 字符串
             json_str = json.dumps(defult_dist,indent=1)
-            # 写入字符串到json
+
             with open(self.path, 'w') as json_file:
                 json_file.write(json_str)
 
@@ -55,7 +53,7 @@ class Json_c():
             print(str(self.path)+" existed")
             pass    
     
-    '''读'''
+    '''read all '''
     def read_all(self):
 
         with open(self.path,'r') as load_f:
@@ -63,52 +61,52 @@ class Json_c():
         
         return self.json_data
     
-    '''读一级键对应的内容'''
+    '''read'''
     def read_level1(self,key):
         # print(json.dumps(self.json_data[key],indent=1))
         return self.json_data[key]
     
-    '''读二级键对应的内容'''
+    '''read'''
     def read_level2(self,key1,key2):
         # print(json.dumps(self.json_data[key1][key2],indent=1))
         return self.json_data[key1][key2]
 
-    '''增'''
+    '''add'''
     def add(self,key,data):
         temp = {key:data}
         self.json_data.update(temp)
         pass
 
-    '''删'''
+    '''del'''
     def dele(self,key):
         self.json_data.pop(key)
         pass
 
-    '''更新键值'''
+    '''update key value'''
     def update_data1(self,key,value):
         self.json_data[key] = value
-        # json 转 字符串
+        # json to  str
         # json_str = json.dumps(self.json_data, ensure_ascii=False, indent=4)
         json_str = json.dumps(self.json_data,indent=1)
-        # 写入字符串到json
+        # write to json
         with open(self.path, 'w') as json_file:
 	        json_file.write(json_str)
 
         pass
 
-    '''更新键值'''
+    '''update key value'''
     def update_data2(self,key1,key2,value):
         self.json_data[key1][key2] = value
-        # json 转 字符串
+        # json to  str
         json_str = json.dumps(self.json_data,indent=1)
-        # 写入字符串到json
+        # write to json
         with open(self.path, 'w') as json_file:
 	        json_file.write(json_str)
 
         pass
 
 
-    '''打印'''
+    '''print'''
     def print_json(self):
         print(json.dumps(self.json_data,indent=1))
         pass
@@ -118,7 +116,7 @@ class Json_c():
 global Json_g
 Json_g = Json_c('C:config.json')
 
-# '''主函数'''
+
 # def main():
 #     test = Json_c('C:config.json')
 #     test.read_level1("place_pos")
